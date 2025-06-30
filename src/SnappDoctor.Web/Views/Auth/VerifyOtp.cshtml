@@ -1,0 +1,118 @@
+@model VerifyOtpDto
+@{
+    ViewData["Title"] = "تایید کد";
+}
+
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-12">
+    <div class="container mx-auto px-4">
+        <div class="max-w-md mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">تایید شماره موبایل</h1>
+                <p class="text-gray-600 mb-2">کد تایید به شماره @Model.PhoneNumber ارسال شد</p>
+                <p class="text-sm text-gray-500">کد را در کادر زیر وارد کنید</p>
+            </div>
+
+            <!-- OTP Form -->
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <form asp-action="VerifyOtp" method="post" class="space-y-6">
+                    <input asp-for="PhoneNumber" type="hidden" />
+                    <input asp-for="Purpose" type="hidden" />
+                    
+                    <div asp-validation-summary="ModelOnly" class="text-red-600 text-sm"></div>
+
+                    <!-- OTP Code Input -->
+                    <div>
+                        <label asp-for="Code" class="block text-sm font-medium text-gray-700 mb-4 text-center"></label>
+                        <div class="flex justify-center space-x-2 space-x-reverse">
+                            <input asp-for="Code" 
+                                   maxlength="4"
+                                   class="w-full text-center text-2xl font-bold py-4 px-4 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                   placeholder="۰۰۰۰"
+                                   autofocus>
+                        </div>
+                        <span asp-validation-for="Code" class="text-red-500 text-sm block text-center mt-2"></span>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" 
+                            class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105">
+                        تایید کد
+                    </button>
+
+                    <!-- Resend Code -->
+                    <div class="text-center">
+                        <p class="text-gray-600 mb-2">کد را دریافت نکردید؟</p>
+                        <button type="button" 
+                                onclick="resendOtp('@Model.PhoneNumber', '@Model.Purpose')"
+                                class="text-blue-600 hover:text-blue-800 font-medium">
+                            ارسال مجدد کد
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Timer and Info -->
+            <div class="mt-6 text-center">
+                <div class="bg-white/50 backdrop-blur-sm rounded-lg p-4">
+                    <div class="flex items-center justify-center mb-2">
+                        <svg class="w-5 h-5 text-orange-500 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-700">مدت اعتبار کد: 5 دقیقه</span>
+                    </div>
+                    <p class="text-xs text-gray-500">در صورت عدم دریافت کد، شماره خود را بررسی کرده و مجدداً تلاش کنید</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-submit when 4 digits are entered
+        document.querySelector('input[name="Code"]').addEventListener('input', function(e) {
+            if (e.target.value.length === 4) {
+                // Auto submit after a short delay
+                setTimeout(() => {
+                    e.target.form.submit();
+                }, 500);
+            }
+        });
+
+        // Resend OTP function
+        async function resendOtp(phoneNumber, purpose) {
+            const button = event.target;
+            button.disabled = true;
+            button.textContent = 'در حال ارسال...';
+
+            try {
+                const response = await fetch('/Auth/ResendOtp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `phoneNumber=${encodeURIComponent(phoneNumber)}&purpose=${encodeURIComponent(purpose)}`
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('کد تایید مجدداً ارسال شد');
+                } else {
+                    alert(result.message || 'خطا در ارسال کد');
+                }
+            } catch (error) {
+                alert('خطا در ارسال کد. لطفاً مجدداً تلاش کنید.');
+            } finally {
+                button.disabled = false;
+                button.textContent = 'ارسال مجدد کد';
+            }
+        }
+    </script>
+} 
