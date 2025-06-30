@@ -4,11 +4,11 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnappDoctor.Web", "src\SnappDoctor.Web\SnappDoctor.Web.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnappDoctor.Core", "src\SnappDoctor.Core\SnappDoctor.Core.csproj", "{B2C3D4E5-F6G7-8901-BCDE-F23456789012}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnappDoctor.Core", "src\SnappDoctor.Core\SnappDoctor.Core.csproj", "{E196E9DE-F506-43A7-A1DB-0C57F46679F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnappDoctor.Infrastructure", "src\SnappDoctor.Infrastructure\SnappDoctor.Infrastructure.csproj", "{C3D4E5F6-G7H8-9012-CDEF-345678901234}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnappDoctor.Infrastructure", "src\SnappDoctor.Infrastructure\SnappDoctor.Infrastructure.csproj", "{10BA373C-67E0-4642-B0B5-5CD149C037A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnappDoctor.Application", "src\SnappDoctor.Application\SnappDoctor.Application.csproj", "{D4E5F6G7-H8I9-0123-DEF4-56789012345A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnappDoctor.Application", "src\SnappDoctor.Application\SnappDoctor.Application.csproj", "{79F7F4C3-F31A-4CBD-B8C8-5A7182014110}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,17 +20,20 @@ Global
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B2C3D4E5-F6G7-8901-BCDE-F23456789012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2C3D4E5-F6G7-8901-BCDE-F23456789012}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2C3D4E5-F6G7-8901-BCDE-F23456789012}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2C3D4E5-F6G7-8901-BCDE-F23456789012}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C3D4E5F6-G7H8-9012-CDEF-345678901234}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C3D4E5F6-G7H8-9012-CDEF-345678901234}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C3D4E5F6-G7H8-9012-CDEF-345678901234}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C3D4E5F6-G7H8-9012-CDEF-345678901234}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D4E5F6G7-H8I9-0123-DEF4-56789012345A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4E5F6G7-H8I9-0123-DEF4-56789012345A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4E5F6G7-H8I9-0123-DEF4-56789012345A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D4E5F6G7-H8I9-0123-DEF4-56789012345A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E196E9DE-F506-43A7-A1DB-0C57F46679F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E196E9DE-F506-43A7-A1DB-0C57F46679F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E196E9DE-F506-43A7-A1DB-0C57F46679F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E196E9DE-F506-43A7-A1DB-0C57F46679F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10BA373C-67E0-4642-B0B5-5CD149C037A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10BA373C-67E0-4642-B0B5-5CD149C037A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10BA373C-67E0-4642-B0B5-5CD149C037A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10BA373C-67E0-4642-B0B5-5CD149C037A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79F7F4C3-F31A-4CBD-B8C8-5A7182014110}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79F7F4C3-F31A-4CBD-B8C8-5A7182014110}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79F7F4C3-F31A-4CBD-B8C8-5A7182014110}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79F7F4C3-F31A-4CBD-B8C8-5A7182014110}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
-EndGlobal 
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

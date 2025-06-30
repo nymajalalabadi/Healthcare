@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SnappDoctor.Core\SnappDoctor.Core.csproj" />
     <ProjectReference Include="..\SnappDoctor.Application\SnappDoctor.Application.csproj" />
     <ProjectReference Include="..\SnappDoctor.Infrastructure\SnappDoctor.Infrastructure.csproj" />
