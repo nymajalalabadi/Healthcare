@@ -88,6 +88,34 @@
                         <span asp-validation-for="ConfirmPassword" class="text-red-500 text-sm"></span>
                     </div>
 
+                    <!-- User Type -->
+                    <div>
+                        <label asp-for="UserType" class="block text-sm font-medium text-gray-700 mb-3"></label>
+                        <div class="space-y-4">
+                            <div class="flex items-start p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                <input asp-for="UserType" type="radio" value="1" checked
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 mt-1">
+                                <div class="mr-3">
+                                    <label class="block text-sm font-medium text-gray-900">
+                                        کاربر عادی (بیمار)
+                                    </label>
+                                    <p class="text-xs text-gray-500 mt-1">برای دریافت مشاوره پزشکی و رزرو نوبت</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                <input asp-for="UserType" type="radio" value="2"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 mt-1">
+                                <div class="mr-3">
+                                    <label class="block text-sm font-medium text-gray-900">
+                                        پزشک
+                                    </label>
+                                    <p class="text-xs text-gray-500 mt-1">برای ارائه مشاوره پزشکی و مدیریت بیماران</p>
+                                </div>
+                            </div>
+                        </div>
+                        <span asp-validation-for="UserType" class="text-red-500 text-sm"></span>
+                    </div>
+
                     <!-- Submit Button -->
                     <button type="submit" 
                             class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105">

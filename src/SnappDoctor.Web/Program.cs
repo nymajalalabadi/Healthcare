@@ -47,6 +47,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 // Add repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IOtpRepository, OtpRepository>();
+builder.Services.AddScoped<IConsultationRepository, ConsultationRepository>();
+builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
 
 // Add services
 builder.Services.AddScoped<ISmsService, KavenegarSmsService>();
@@ -70,6 +72,10 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

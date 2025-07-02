@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using SnappDoctor.Core.Enums;
 
 namespace SnappDoctor.Application.DTOs.Auth;
 
@@ -26,4 +27,8 @@ public class RegisterDto
     [Compare("Password", ErrorMessage = "رمز عبور و تکرار آن یکسان نیستند")]
     [Display(Name = "تکرار رمز عبور")]
     public string ConfirmPassword { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "نوع کاربری الزامی است")]
+    [Display(Name = "نوع کاربری")]
+    public UserType UserType { get; set; } = UserType.RegularUser;
 } 

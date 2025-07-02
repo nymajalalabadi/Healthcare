@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SnappDoctor.Application.Contracts;
 using SnappDoctor.Application.DTOs.Auth;
 using SnappDoctor.Core.Entities;
+using SnappDoctor.Core.Enums;
 
 namespace SnappDoctor.Web.Controllers;
 
@@ -13,17 +14,23 @@ public class AuthController : Controller
     private readonly IOtpRepository _otpRepository;
     private readonly ISmsService _smsService;
     private readonly SignInManager<User> _signInManager;
+    private readonly UserManager<User> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
     public AuthController(
         IUserRepository userRepository,
         IOtpRepository otpRepository,
         ISmsService smsService,
-        SignInManager<User> signInManager)
+        SignInManager<User> signInManager,
+        UserManager<User> userManager,
+        RoleManager<IdentityRole> roleManager)
     {
         _userRepository = userRepository;
         _otpRepository = otpRepository;
         _smsService = smsService;
         _signInManager = signInManager;
+        _userManager = userManager;
+        _roleManager = roleManager;
     }
 
     [HttpGet]
@@ -55,10 +62,16 @@ public class AuthController : Controller
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 PhoneNumber = model.PhoneNumber,
-                PhoneNumberConfirmed = false
+                PhoneNumberConfirmed = false,
+                UserType = model.UserType
             };
 
             var createdUser = await _userRepository.CreateAsync(user, model.Password);
+
+            // Assign role based on user type
+            await EnsureRolesExist();
+            var roleName = model.UserType == UserType.Doctor ? "Doctor" : "User";
+            await _userManager.AddToRoleAsync(createdUser, roleName);
 
             // Generate and send OTP
             var otpCode = new Random().Next(1000, 9999).ToString();
@@ -75,6 +88,7 @@ public class AuthController : Controller
             await _smsService.SendOtpAsync(model.PhoneNumber, otpCode);
 
             TempData["PhoneNumber"] = model.PhoneNumber;
+            TempData["UserType"] = model.UserType.ToString();
             TempData["Message"] = "ثبت‌نام با موفقیت انجام شد. کد تایید به شماره موبایل شما ارسال شده است.";
             
             return RedirectToAction("VerifyOtp");
@@ -118,7 +132,16 @@ public class AuthController : Controller
 
         if (result.Succeeded)
         {
-            return RedirectToAction("Index", "Home");
+            // Redirect based on user role
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (userRoles.Contains("Doctor"))
+            {
+                return RedirectToAction("Index", "Dashboard", new { area = "Doctor" });
+            }
+            else
+            {
+                return RedirectToAction("Index", "Dashboard", new { area = "User" });
+            }
         }
 
         ModelState.AddModelError("", "شماره موبایل یا رمز عبور اشتباه است");
@@ -169,7 +192,22 @@ public class AuthController : Controller
         }
 
         TempData["Message"] = "شماره موبایل با موفقیت تایید شد. خوش آمدید!";
-        return RedirectToAction("Index", "Home");
+        
+        // Redirect based on user role
+        if (user != null)
+        {
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (userRoles.Contains("Doctor"))
+            {
+                return RedirectToAction("Index", "Dashboard", new { area = "Doctor" });
+            }
+            else
+            {
+                return RedirectToAction("Index", "Dashboard", new { area = "User" });
+            }
+        }
+        
+        return RedirectToAction("Index", "Dashboard", new { area = "User" });
     }
 
     [HttpPost]
@@ -222,6 +260,20 @@ public class AuthController : Controller
         catch (Exception)
         {
             return Json(new { success = false, message = "خطای سیستمی رخ داده است" });
+        }
+    }
+
+    private async Task EnsureRolesExist()
+    {
+        string[] roleNames = { "User", "Doctor" };
+
+        foreach (var roleName in roleNames)
+        {
+            var roleExists = await _roleManager.RoleExistsAsync(roleName);
+            if (!roleExists)
+            {
+                await _roleManager.CreateAsync(new IdentityRole(roleName));
+            }
         }
     }
 } 

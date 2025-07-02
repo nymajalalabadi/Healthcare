@@ -1,242 +1,116 @@
 @{
-    ViewData["Title"] = "خانه";
-    var doctors = ViewBag.Doctors as IEnumerable<Doctor> ?? new List<Doctor>();
+    ViewData["Title"] = "صفحه اصلی";
 }
 
-<!-- Hero Section -->
-<section class="bg-gradient-to-l from-blue-600 to-blue-800 text-white py-20">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div class="fade-in">
-                <h1 class="text-4xl md:text-6xl font-bold mb-6">
-                    مشاوره پزشکی
-                    <span class="text-blue-200">آنلاین</span>
-                </h1>
-                <p class="text-xl mb-8 text-blue-100">
-                    پلتفرم دیجیتال سلامت برای مشاوره‌های پزشکی و روانشناسی آنلاین. با بهترین پزشکان کشور در تماس باشید.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="/Auth/Register" class="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-blue-50 transition-colors text-center">
-                        رزرو مشاوره
-                    </a>
-                    <a href="#services" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors text-center">
-                        خدمات ما
-                    </a>
-                </div>
-            </div>
-            <div class="hidden lg:block">
-                <div class="relative">
-                    <div class="bg-white rounded-2xl p-8 shadow-2xl">
-                        <div class="flex items-center mb-6">
-                            <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center ml-4">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </div>
-                            <div class="text-gray-800">
-                                <h3 class="font-semibold">مشاوره ۲۴ ساعته</h3>
-                                <p class="text-sm text-gray-600">در هر زمان و مکان</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center mb-6">
-                            <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center ml-4">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <div class="text-gray-800">
-                                <h3 class="font-semibold">پزشکان مجرب</h3>
-                                <p class="text-sm text-gray-600">تخصص‌های مختلف</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center ml-4">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                                </svg>
-                            </div>
-                            <div class="text-gray-800">
-                                <h3 class="font-semibold">حفظ حریم شخصی</h3>
-                                <p class="text-sm text-gray-600">امنیت کامل اطلاعات</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Services Section -->
-<section id="services" class="py-20 bg-white">
-    <div class="container mx-auto px-4">
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+    <!-- Hero Section -->
+    <div class="container mx-auto px-4 py-16">
         <div class="text-center mb-16">
-            <h2 class="text-4xl font-bold text-gray-800 mb-4">خدمات ما</h2>
-            <p class="text-xl text-gray-600">مجموعه کاملی از خدمات درمانی و مشاوره‌ای</p>
+            <h1 class="text-6xl font-bold text-gray-800 mb-6">اسنپ‌داکتر</h1>
+            <p class="text-xl text-gray-600 mb-8">پلتفرم تله‌مدیسین پیشرفته ایران</p>
+            <p class="text-lg text-gray-500 max-w-2xl mx-auto">
+                به راحتی با بهترین پزشکان کشور در ارتباط باشید. مشاوره آنلاین، نوبت‌دهی و پیگیری درمان در یک مکان.
+            </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Online Consultation -->
-            <div class="bg-blue-50 p-8 rounded-2xl hover:shadow-lg transition-shadow">
-                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mb-6">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+        <!-- Action Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
+            <!-- User Panel -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 text-center hover:shadow-2xl transition-shadow">
+                <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
                 </div>
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">مشاوره آنلاین پزشک</h3>
-                <p class="text-gray-600 mb-6">مشاوره متنی و تلفنی فوری با پزشکان متخصص در تمامی رشته‌ها</p>
-                <ul class="text-sm text-gray-600 space-y-2">
-                    <li class="flex items-center">
-                        <svg class="w-4 h-4 text-green-500 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        پاسخ سریع
-                    </li>
-                    <li class="flex items-center">
-                        <svg class="w-4 h-4 text-green-500 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        تمامی تخصص‌ها
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Psychology Consultation -->
-            <div class="bg-purple-50 p-8 rounded-2xl hover:shadow-lg transition-shadow">
-                <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mb-6">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                    </svg>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">پنل بیمار</h3>
+                <p class="text-gray-600 mb-6">
+                    جستجو و انتخاب پزشک، رزرو نوبت، مشاوره آنلاین و پیگیری درمان
+                </p>
+                <div class="space-y-3">
+                    <a href="/User/Dashboard" class="block w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">
+                        ورود به پنل بیمار
+                    </a>
+                    <a href="/Auth/Register" class="block w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-200 transition-colors">
+                        ثبت‌نام جدید
+                    </a>
                 </div>
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">مشاوره روانشناسی</h3>
-                <p class="text-gray-600 mb-6">مشاوره تلفنی فوری یا رزرو جلسه با روانشناسان مجرب</p>
-                <ul class="text-sm text-gray-600 space-y-2">
-                    <li class="flex items-center">
-                        <svg class="w-4 h-4 text-green-500 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        مشاوره تخصصی
-                    </li>
-                    <li class="flex items-center">
-                        <svg class="w-4 h-4 text-green-500 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        حفظ حریم شخصی
-                    </li>
-                </ul>
             </div>
 
-            <!-- ePrescription -->
-            <div class="bg-green-50 p-8 rounded-2xl hover:shadow-lg transition-shadow">
-                <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-6">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Doctor Panel -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 text-center hover:shadow-2xl transition-shadow">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                 </div>
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">نسخه الکترونیک</h3>
-                <p class="text-gray-600 mb-6">دریافت نسخه دیجیتال با کد رهگیری یا تصویر نسخه</p>
-                <ul class="text-sm text-gray-600 space-y-2">
-                    <li class="flex items-center">
-                        <svg class="w-4 h-4 text-green-500 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        کد رهگیری
-                    </li>
-                    <li class="flex items-center">
-                        <svg class="w-4 h-4 text-green-500 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        ذخیره آنلاین
-                    </li>
-                </ul>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">پنل پزشک</h3>
+                <p class="text-gray-600 mb-6">
+                    مدیریت نوبت‌ها، انجام مشاوره‌های آنلاین و پیگیری بیماران
+                </p>
+                <div class="space-y-3">
+                    <a href="/Doctor/Dashboard" class="block w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors">
+                        ورود به پنل پزشک
+                    </a>
+                    <span class="block text-sm text-gray-500">
+                        (نیاز به تأیید نظام پزشکی)
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div class="bg-white/70 backdrop-blur-sm rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h4 class="text-lg font-semibold text-gray-800 mb-2">۲۴ ساعته</h4>
+                <p class="text-gray-600">در تمام ساعات شبانه‌روز در دسترس</p>
+            </div>
+
+            <div class="bg-white/70 backdrop-blur-sm rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h4 class="text-lg font-semibold text-gray-800 mb-2">تضمین کیفیت</h4>
+                <p class="text-gray-600">بهترین پزشکان با مجوز رسمی</p>
+            </div>
+
+            <div class="bg-white/70 backdrop-blur-sm rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h4 class="text-lg font-semibold text-gray-800 mb-2">امنیت بالا</h4>
+                <p class="text-gray-600">حفاظت کامل از اطلاعات پزشکی</p>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="mt-16 text-center">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+                <div>
+                    <div class="text-3xl font-bold text-blue-600">۵۰۰+</div>
+                    <div class="text-gray-600">پزشک متخصص</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-green-600">۱۰,۰۰۰+</div>
+                    <div class="text-gray-600">مشاوره انجام شده</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-purple-600">۹۸%</div>
+                    <div class="text-gray-600">رضایت بیماران</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-orange-600">۲۴/۷</div>
+                    <div class="text-gray-600">پشتیبانی</div>
+                </div>
             </div>
         </div>
     </div>
-</section>
-
-<!-- Doctors Section -->
-<section id="doctors" class="py-20 bg-gray-50">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-bold text-gray-800 mb-4">پزشکان پیشنهادی</h2>
-            <p class="text-xl text-gray-600">بهترین‌های هر تخصص در خدمت شما</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @foreach (var doctor in doctors)
-            {
-                <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                    <div class="flex items-center mb-4">
-                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center ml-4">
-                            <span class="text-white font-bold text-lg">@doctor.FirstName.Substring(0, 1)</span>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800">@doctor.FullName</h3>
-                            <p class="text-blue-600 font-medium">@doctor.Specialization</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center mb-4">
-                        <div class="flex text-yellow-400 ml-2">
-                            @for (int i = 0; i < 5; i++)
-                            {
-                                if (i < Math.Floor((double)doctor.Rating))
-                                {
-                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                                        <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
-                                    </svg>
-                                }
-                                else
-                                {
-                                    <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 20 20">
-                                        <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
-                                    </svg>
-                                }
-                            }
-                        </div>
-                        <span class="text-gray-600 text-sm">@doctor.Rating (@doctor.ReviewCount نظر)</span>
-                    </div>
-                    
-                    <p class="text-gray-600 text-sm mb-4">@doctor.Bio</p>
-                    
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">@doctor.YearsOfExperience سال تجربه</span>
-                        <div class="flex items-center">
-                            @if (doctor.IsAvailable)
-                            {
-                                <span class="w-3 h-3 bg-green-500 rounded-full ml-2"></span>
-                                <span class="text-sm text-green-600">آنلاین</span>
-                            }
-                            else
-                            {
-                                <span class="w-3 h-3 bg-gray-400 rounded-full ml-2"></span>
-                                <span class="text-sm text-gray-600">آفلاین</span>
-                            }
-                        </div>
-                    </div>
-                    
-                    <button class="w-full mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
-                        شروع مشاوره
-                    </button>
-                </div>
-            }
-        </div>
-
-        <div class="text-center mt-12">
-            <a href="#" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors">
-                مشاهده همه پزشکان
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- CTA Section -->
-<section class="py-20 bg-blue-600 text-white">
-    <div class="container mx-auto px-4 text-center">
-        <h2 class="text-4xl font-bold mb-6">آماده‌اید تا سلامتتان را به ما بسپارید؟</h2>
-        <p class="text-xl mb-8 text-blue-100">با ثبت‌نام در اسنپ‌داکتر، به راحتی با بهترین پزشکان کشور در ارتباط باشید</p>
-        <a href="/Auth/Register" class="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-blue-50 transition-colors inline-block">
-            همین حالا ثبت‌نام کنید
-        </a>
-    </div>
-</section> 
+</div> 

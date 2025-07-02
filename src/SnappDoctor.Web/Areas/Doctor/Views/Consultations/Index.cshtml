@@ -1,0 +1,143 @@
+@model IEnumerable<Consultation>
+@{
+    ViewData["Title"] = "مشاوره‌ها";
+}
+
+<div class="px-4 py-6 sm:px-0">
+    <!-- Header -->
+    <div class="mb-8 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">مشاوره‌ها</h1>
+            <p class="text-gray-600 mt-2">مدیریت مشاوره‌های بیماران</p>
+        </div>
+    </div>
+
+    <!-- Status Filter -->
+    <div class="mb-6">
+        <div class="bg-white rounded-lg shadow p-4">
+            <div class="flex flex-wrap items-center gap-3">
+                <span class="text-gray-700 font-medium">فیلتر وضعیت:</span>
+                <a href="/Doctor/Consultations" class="px-4 py-2 rounded-full @(ViewBag.CurrentStatus == null ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300")">همه</a>
+                <a href="/Doctor/Consultations?status=Pending" class="px-4 py-2 rounded-full @(ViewBag.CurrentStatus?.ToString() == "Pending" ? "bg-yellow-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300")">در انتظار</a>
+                <a href="/Doctor/Consultations?status=Confirmed" class="px-4 py-2 rounded-full @(ViewBag.CurrentStatus?.ToString() == "Confirmed" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300")">تأیید شده</a>
+                <a href="/Doctor/Consultations?status=InProgress" class="px-4 py-2 rounded-full @(ViewBag.CurrentStatus?.ToString() == "InProgress" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300")">در حال انجام</a>
+                <a href="/Doctor/Consultations?status=Completed" class="px-4 py-2 rounded-full @(ViewBag.CurrentStatus?.ToString() == "Completed" ? "bg-green-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300")">تکمیل شده</a>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+            <div class="divide-y divide-gray-200">
+                @foreach (var consultation in Model)
+                {
+                    <div class="p-6 hover:bg-gray-50">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3 space-x-reverse">
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-medium text-gray-900">@consultation.User.FullName</h3>
+                                        <p class="text-sm text-gray-500">@consultation.User.PhoneNumber</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                    <div>
+                                        <span class="text-gray-500">نوع مشاوره:</span>
+                                        <p class="font-medium">
+                                            @(consultation.Type == ConsultationType.TextChat ? "چت متنی" :
+                                              consultation.Type == ConsultationType.VoiceCall ? "تماس صوتی" :
+                                              consultation.Type == ConsultationType.VideoCall ? "تماس تصویری" :
+                                              "حضوری")
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500">تاریخ رزرو:</span>
+                                        <p class="font-medium">@consultation.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd")</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500">زمان مشاوره:</span>
+                                        <p class="font-medium">@consultation.ScheduledAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm")</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500">هزینه:</span>
+                                        <p class="font-medium">@consultation.Fee.ToString("N0") تومان</p>
+                                    </div>
+                                </div>
+                                
+                                @if (!string.IsNullOrEmpty(consultation.PatientSymptoms))
+                                {
+                                    <div class="mt-3">
+                                        <span class="text-gray-500 text-sm">علائم بیمار:</span>
+                                        <p class="text-sm text-gray-700 mt-1">@consultation.PatientSymptoms</p>
+                                    </div>
+                                }
+                            </div>
+                            
+                            <div class="flex flex-col items-end space-y-3">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                                    @(consultation.Status == ConsultationStatus.Completed ? "bg-green-100 text-green-800" :
+                                      consultation.Status == ConsultationStatus.Pending ? "bg-yellow-100 text-yellow-800" :
+                                      consultation.Status == ConsultationStatus.InProgress ? "bg-blue-100 text-blue-800" :
+                                      consultation.Status == ConsultationStatus.Confirmed ? "bg-blue-100 text-blue-800" :
+                                      consultation.Status == ConsultationStatus.Cancelled ? "bg-red-100 text-red-800" :
+                                      "bg-gray-100 text-gray-800")">
+                                    @(consultation.Status == ConsultationStatus.Completed ? "تکمیل شده" :
+                                      consultation.Status == ConsultationStatus.Pending ? "در انتظار تأیید" :
+                                      consultation.Status == ConsultationStatus.InProgress ? "در حال انجام" :
+                                      consultation.Status == ConsultationStatus.Confirmed ? "تأیید شده" :
+                                      consultation.Status == ConsultationStatus.Cancelled ? "لغو شده" :
+                                      consultation.Status.ToString())
+                                </span>
+                                
+                                <div class="flex space-x-2 space-x-reverse">
+                                    <a href="/Doctor/Consultations/Details/@consultation.Id" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
+                                        جزئیات
+                                    </a>
+                                    
+                                    @if (consultation.Status == ConsultationStatus.Pending)
+                                    {
+                                        <form asp-action="Accept" method="post" class="inline">
+                                            <input type="hidden" name="id" value="@consultation.Id" />
+                                            <button type="submit" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+                                                تأیید
+                                            </button>
+                                        </form>
+                                    }
+                                    
+                                    @if (consultation.Status == ConsultationStatus.Confirmed)
+                                    {
+                                        <form asp-action="Start" method="post" class="inline">
+                                            <input type="hidden" name="id" value="@consultation.Id" />
+                                            <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
+                                                شروع
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-12">
+            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">مشاوره‌ای یافت نشد</h3>
+            <p class="text-gray-600">در حال حاضر مشاوره‌ای با این فیلتر وجود ندارد</p>
+        </div>
+    }
+</div> 
