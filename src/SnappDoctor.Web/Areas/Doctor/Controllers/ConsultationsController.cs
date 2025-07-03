@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SnappDoctor.Application.Contracts;
+using SnappDoctor.Core.Entities;
 using SnappDoctor.Core.Enums;
 
 namespace SnappDoctor.Web.Areas.Doctor.Controllers;
@@ -10,16 +12,36 @@ namespace SnappDoctor.Web.Areas.Doctor.Controllers;
 public class ConsultationsController : Controller
 {
     private readonly IConsultationRepository _consultationRepository;
+    private readonly IDoctorRepository _doctorRepository;
+    private readonly UserManager<SnappDoctor.Core.Entities.User> _userManager;
 
-    public ConsultationsController(IConsultationRepository consultationRepository)
+    public ConsultationsController(
+        IConsultationRepository consultationRepository,
+        IDoctorRepository doctorRepository,
+        UserManager<SnappDoctor.Core.Entities.User> userManager)
     {
         _consultationRepository = consultationRepository;
+        _doctorRepository = doctorRepository;
+        _userManager = userManager;
+    }
+
+    private async Task<SnappDoctor.Core.Entities.Doctor?> GetCurrentDoctorAsync()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return null;
+        
+        return await _doctorRepository.GetByUserIdAsync(user.Id);
     }
 
     public async Task<IActionResult> Index(ConsultationStatus? status)
     {
-        var doctorId = 1; // This should come from user claims
-        var consultations = await _consultationRepository.GetDoctorConsultationsAsync(doctorId);
+        var doctor = await GetCurrentDoctorAsync();
+        if (doctor == null)
+        {
+            return RedirectToAction("Login", "Auth", new { area = "" });
+        }
+
+        var consultations = await _consultationRepository.GetDoctorConsultationsAsync(doctor.Id);
         
         if (status.HasValue)
         {
@@ -32,10 +54,14 @@ public class ConsultationsController : Controller
 
     public async Task<IActionResult> Details(int id)
     {
-        var doctorId = 1; // This should come from user claims
+        var doctor = await GetCurrentDoctorAsync();
+        if (doctor == null)
+        {
+            return RedirectToAction("Login", "Auth", new { area = "" });
+        }
+
         var consultation = await _consultationRepository.GetByIdAsync(id);
-        
-        if (consultation == null || consultation.DoctorId != doctorId)
+        if (consultation == null || consultation.DoctorId != doctor.Id)
         {
             return NotFound();
         }
@@ -46,10 +72,14 @@ public class ConsultationsController : Controller
     [HttpPost]
     public async Task<IActionResult> Accept(int id)
     {
-        var doctorId = 1; // This should come from user claims
+        var doctor = await GetCurrentDoctorAsync();
+        if (doctor == null)
+        {
+            return RedirectToAction("Login", "Auth", new { area = "" });
+        }
+
         var consultation = await _consultationRepository.GetByIdAsync(id);
-        
-        if (consultation == null || consultation.DoctorId != doctorId)
+        if (consultation == null || consultation.DoctorId != doctor.Id)
         {
             return NotFound();
         }
@@ -69,10 +99,14 @@ public class ConsultationsController : Controller
     [HttpPost]
     public async Task<IActionResult> Start(int id)
     {
-        var doctorId = 1; // This should come from user claims
+        var doctor = await GetCurrentDoctorAsync();
+        if (doctor == null)
+        {
+            return RedirectToAction("Login", "Auth", new { area = "" });
+        }
+
         var consultation = await _consultationRepository.GetByIdAsync(id);
-        
-        if (consultation == null || consultation.DoctorId != doctorId)
+        if (consultation == null || consultation.DoctorId != doctor.Id)
         {
             return NotFound();
         }
@@ -93,10 +127,14 @@ public class ConsultationsController : Controller
     [HttpPost]
     public async Task<IActionResult> Complete(int id, string doctorNotes, string prescription)
     {
-        var doctorId = 1; // This should come from user claims
+        var doctor = await GetCurrentDoctorAsync();
+        if (doctor == null)
+        {
+            return RedirectToAction("Login", "Auth", new { area = "" });
+        }
+
         var consultation = await _consultationRepository.GetByIdAsync(id);
-        
-        if (consultation == null || consultation.DoctorId != doctorId)
+        if (consultation == null || consultation.DoctorId != doctor.Id)
         {
             return NotFound();
         }

@@ -32,16 +32,62 @@
                         <div class="mr-10 flex items-baseline space-x-4 space-x-reverse">
                             <a href="/Doctor/Dashboard" class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium">داشبورد</a>
                             <a href="/Doctor/Consultations" class="text-blue-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium">مشاوره‌ها</a>
+                            <a href="/Doctor/Profile" class="text-blue-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium">پروفایل</a>
                         </div>
                     </div>
                 </div>
                 <div class="flex items-center">
-                    <div class="flex items-center space-x-4 space-x-reverse">
-                        <span class="text-blue-200">دکتر محمد فرضی‌پور</span>
-                        <a href="/Doctor/Dashboard/Profile" class="text-blue-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium">پروفایل</a>
-                        <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post" class="inline">
-                            <button type="submit" class="text-blue-200 hover:text-red-300 px-3 py-2 rounded-md text-sm font-medium">خروج</button>
-                        </form>
+                    <!-- User Dropdown -->
+                    <div class="relative" id="userDropdown">
+                        <button type="button" class="flex items-center space-x-3 space-x-reverse text-blue-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium cursor-pointer" onclick="toggleDropdown()">
+                            <div class="w-8 h-8 bg-blue-700 rounded-full flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                            <span>@User.Identity.Name</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div id="dropdownMenu" class="hidden absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                            <div class="py-1">
+                                <div class="px-4 py-2 border-b">
+                                    <p class="text-sm font-medium text-gray-900">دکتر @User.Identity.Name</p>
+                                    <p class="text-sm text-gray-500">پنل پزشکی</p>
+                                </div>
+                                <a href="/Doctor/Profile" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <svg class="w-4 h-4 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    پروفایل من
+                                </a>
+                                <a href="/Doctor/Profile/Schedule" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <svg class="w-4 h-4 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    برنامه زمانی
+                                </a>
+                                <a href="/Doctor/Profile/Analytics" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <svg class="w-4 h-4 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                    </svg>
+                                    گزارش‌ها و آمار
+                                </a>
+                                <div class="border-t">
+                                    <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post" class="block">
+                                        <button type="submit" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            <svg class="w-4 h-4 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                            </svg>
+                                            خروج از حساب
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -75,6 +121,30 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdownMenu');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('userDropdown');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            
+            if (!dropdown.contains(event.target)) {
+                dropdownMenu.classList.add('hidden');
+            }
+        });
+
+        // Close dropdown with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.getElementById('dropdownMenu').classList.add('hidden');
+            }
+        });
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

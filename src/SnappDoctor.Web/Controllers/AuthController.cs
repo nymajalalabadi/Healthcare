@@ -13,6 +13,7 @@ public class AuthController : Controller
     private readonly IUserRepository _userRepository;
     private readonly IOtpRepository _otpRepository;
     private readonly ISmsService _smsService;
+    private readonly IDoctorRepository _doctorRepository;
     private readonly SignInManager<User> _signInManager;
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
@@ -21,6 +22,7 @@ public class AuthController : Controller
         IUserRepository userRepository,
         IOtpRepository otpRepository,
         ISmsService smsService,
+        IDoctorRepository doctorRepository,
         SignInManager<User> signInManager,
         UserManager<User> userManager,
         RoleManager<IdentityRole> roleManager)
@@ -28,6 +30,7 @@ public class AuthController : Controller
         _userRepository = userRepository;
         _otpRepository = otpRepository;
         _smsService = smsService;
+        _doctorRepository = doctorRepository;
         _signInManager = signInManager;
         _userManager = userManager;
         _roleManager = roleManager;
@@ -72,6 +75,46 @@ public class AuthController : Controller
             await EnsureRolesExist();
             var roleName = model.UserType == UserType.Doctor ? "Doctor" : "User";
             await _userManager.AddToRoleAsync(createdUser, roleName);
+
+            // If user is registering as a doctor, create Doctor record
+            if (model.UserType == UserType.Doctor)
+            {
+                try
+                {
+                    var doctor = new Doctor
+                    {
+                        UserId = createdUser.Id, // Link to the created user
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        PhoneNumber = model.PhoneNumber,
+                        Email = null, // Will be updated later in profile
+                        Specialization = "عمومی", // Default specialization
+                        MedicalLicenseNumber = null, // Will be updated later
+                        Bio = "",
+                        YearsOfExperience = 0,
+                        Rating = 0,
+                        ReviewCount = 0,
+                        IsAvailable = false, // Doctor needs to complete profile first
+                        IsActive = true,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    var createdDoctor = await _doctorRepository.CreateAsync(doctor);
+                    
+                    // Verify both User and Doctor were created successfully
+                    if (createdDoctor == null)
+                    {
+                        throw new InvalidOperationException("ایجاد حساب پزشک با مشکل مواجه شد.");
+                    }
+                }
+                catch (Exception doctorEx)
+                {
+                    // If doctor creation fails, we should still let the user complete registration
+                    // but log the error for debugging
+                    Console.WriteLine($"خطا در ایجاد رکورد پزشک: {doctorEx.Message}");
+                    // The user account is still created, doctor profile can be completed later
+                }
+            }
 
             // Generate and send OTP
             var otpCode = new Random().Next(1000, 9999).ToString();

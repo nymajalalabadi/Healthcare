@@ -21,6 +21,14 @@ public class DoctorRepository : IDoctorRepository
             .FirstOrDefaultAsync(d => d.Id == id);
     }
 
+    public async Task<Doctor?> GetByUserIdAsync(string userId)
+    {
+        return await _context.Doctors
+            .Include(d => d.Consultations)
+            .Include(d => d.User)
+            .FirstOrDefaultAsync(d => d.UserId == userId);
+    }
+
     public async Task<IEnumerable<Doctor>> GetAllAsync()
     {
         return await _context.Doctors

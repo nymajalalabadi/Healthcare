@@ -34,15 +34,21 @@ public class ApplicationDbContext : IdentityDbContext<User>
             entity.Property(e => e.FirstName).HasMaxLength(50).IsRequired();
             entity.Property(e => e.LastName).HasMaxLength(50).IsRequired();
             entity.Property(e => e.Specialization).HasMaxLength(100).IsRequired();
-            entity.Property(e => e.MedicalLicenseNumber).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.MedicalLicenseNumber).HasMaxLength(50);
             entity.Property(e => e.PhoneNumber).HasMaxLength(15).IsRequired();
-            entity.Property(e => e.Email).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.ProfilePictureUrl).HasMaxLength(500);
             entity.Property(e => e.Bio).HasMaxLength(1000);
             entity.Property(e => e.Rating).HasPrecision(3, 2);
-            entity.HasIndex(e => e.MedicalLicenseNumber).IsUnique();
-            entity.HasIndex(e => e.PhoneNumber).IsUnique();
-            entity.HasIndex(e => e.Email).IsUnique();
+            entity.HasIndex(e => e.MedicalLicenseNumber).IsUnique().HasFilter("[MedicalLicenseNumber] IS NOT NULL");
+            // Removed unique constraint on PhoneNumber to avoid conflict with AspNetUsers
+            entity.HasIndex(e => e.Email).IsUnique().HasFilter("[Email] IS NOT NULL");
+
+            // Relationship with User
+            entity.HasOne(e => e.User)
+                .WithOne(u => u.Doctor)
+                .HasForeignKey<Doctor>(e => e.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         // Consultation entity configuration

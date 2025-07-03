@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SnappDoctor.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SnappDoctor.Infrastructure.Data;
 namespace SnappDoctor.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250703001942_AddProfilePictureToUserAndDoctor")]
+    partial class AddProfilePictureToUserAndDoctor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,13 +236,11 @@ namespace SnappDoctor.Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<decimal>("ConsultationFee")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -260,6 +261,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("MedicalLicenseNumber")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -290,25 +292,19 @@ namespace SnappDoctor.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("YearsOfExperience")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
-                        .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("MedicalLicenseNumber")
-                        .IsUnique()
-                        .HasFilter("[MedicalLicenseNumber] IS NOT NULL");
+                        .IsUnique();
 
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique();
 
                     b.ToTable("Doctors");
 
@@ -317,8 +313,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                         {
                             Id = 1,
                             Bio = "متخصص زنان و زایمان با بیش از 10 سال تجربه",
-                            ConsultationFee = 150000m,
-                            CreatedAt = new DateTime(2025, 7, 3, 1, 21, 24, 343, DateTimeKind.Utc).AddTicks(751),
+                            CreatedAt = new DateTime(2025, 7, 3, 0, 19, 41, 992, DateTimeKind.Utc).AddTicks(4840),
                             Email = "sara.sadeghi@example.com",
                             FirstName = "دکتر سارا",
                             IsActive = true,
@@ -335,8 +330,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                         {
                             Id = 2,
                             Bio = "پزشک عمومی با تجربه در مشاوره‌های آنلاین",
-                            ConsultationFee = 150000m,
-                            CreatedAt = new DateTime(2025, 7, 3, 1, 21, 24, 343, DateTimeKind.Utc).AddTicks(757),
+                            CreatedAt = new DateTime(2025, 7, 3, 0, 19, 41, 992, DateTimeKind.Utc).AddTicks(4880),
                             Email = "mohammad.farzipour@example.com",
                             FirstName = "دکتر محمد",
                             IsActive = true,
@@ -353,8 +347,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                         {
                             Id = 3,
                             Bio = "متخصص بیماری‌های داخلی",
-                            ConsultationFee = 150000m,
-                            CreatedAt = new DateTime(2025, 7, 3, 1, 21, 24, 343, DateTimeKind.Utc).AddTicks(760),
+                            CreatedAt = new DateTime(2025, 7, 3, 0, 19, 41, 992, DateTimeKind.Utc).AddTicks(4883),
                             Email = "milad.mozaffari@example.com",
                             FirstName = "دکتر میلاد",
                             IsActive = true,
@@ -580,16 +573,6 @@ namespace SnappDoctor.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SnappDoctor.Core.Entities.Doctor", b =>
-                {
-                    b.HasOne("SnappDoctor.Core.Entities.User", "User")
-                        .WithOne("Doctor")
-                        .HasForeignKey("SnappDoctor.Core.Entities.Doctor", "UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("SnappDoctor.Core.Entities.OtpCode", b =>
                 {
                     b.HasOne("SnappDoctor.Core.Entities.User", "User")
@@ -609,8 +592,6 @@ namespace SnappDoctor.Infrastructure.Migrations
             modelBuilder.Entity("SnappDoctor.Core.Entities.User", b =>
                 {
                     b.Navigation("Consultations");
-
-                    b.Navigation("Doctor");
 
                     b.Navigation("OtpCodes");
                 });

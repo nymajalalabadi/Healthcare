@@ -101,4 +101,37 @@ public class DoctorsController : Controller
             _ => 50000
         };
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetDoctorProfilePicture(int doctorId)
+    {
+        var doctor = await _doctorRepository.GetByIdAsync(doctorId);
+        if (doctor?.ProfilePicture == null) return NotFound();
+
+        // Determine content type based on file signature
+        string contentType = GetContentType(doctor.ProfilePicture);
+        
+        return File(doctor.ProfilePicture, contentType);
+    }
+
+    private string GetContentType(byte[] fileData)
+    {
+        if (fileData.Length >= 2)
+        {
+            // Check for JPEG
+            if (fileData[0] == 0xFF && fileData[1] == 0xD8)
+                return "image/jpeg";
+            
+            // Check for PNG
+            if (fileData.Length >= 8 && fileData[0] == 0x89 && fileData[1] == 0x50 && 
+                fileData[2] == 0x4E && fileData[3] == 0x47)
+                return "image/png";
+            
+            // Check for GIF
+            if (fileData.Length >= 6 && fileData[0] == 0x47 && fileData[1] == 0x49 && fileData[2] == 0x46)
+                return "image/gif";
+        }
+        
+        return "image/jpeg"; // Default fallback
+    }
 } 

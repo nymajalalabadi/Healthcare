@@ -18,10 +18,13 @@ public class User : IdentityUser
     public bool IsActive { get; set; } = true;
 
     public string? ProfilePictureUrl { get; set; }
+    
+    public byte[]? ProfilePicture { get; set; }
 
     public UserType UserType { get; set; } = UserType.RegularUser;
     
     // Navigation properties
+    public virtual Doctor? Doctor { get; set; }
     public virtual ICollection<Consultation> Consultations { get; set; } = new List<Consultation>();
     public virtual ICollection<OtpCode> OtpCodes { get; set; } = new List<OtpCode>();
 } 

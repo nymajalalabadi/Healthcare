@@ -1,0 +1,160 @@
+@model SnappDoctor.Core.Entities.Doctor
+@{
+    ViewData["Title"] = "ویرایش پروفایل";
+}
+
+<div class="px-4 py-6 sm:px-0">
+    <!-- Header -->
+    <div class="mb-6">
+        <div class="flex items-center space-x-3 space-x-reverse">
+            <a href="/Doctor/Profile" class="text-blue-600 hover:text-blue-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+            </a>
+            <h1 class="text-2xl font-bold text-gray-900">ویرایش پروفایل</h1>
+        </div>
+        <p class="text-gray-600 mt-2">بروزرسانی اطلاعات شخصی و حرفه‌ای</p>
+    </div>
+
+    <form asp-action="Edit" method="post" class="space-y-6">
+        <!-- Personal Information -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">اطلاعات شخصی</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label asp-for="FirstName" class="block text-sm font-medium text-gray-700">نام</label>
+                    <input asp-for="FirstName" type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                    <span asp-validation-for="FirstName" class="text-red-600 text-sm"></span>
+                </div>
+                <div>
+                    <label asp-for="LastName" class="block text-sm font-medium text-gray-700">نام خانوادگی</label>
+                    <input asp-for="LastName" type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                    <span asp-validation-for="LastName" class="text-red-600 text-sm"></span>
+                </div>
+                <div>
+                    <label asp-for="PhoneNumber" class="block text-sm font-medium text-gray-700">شماره تماس</label>
+                    <input asp-for="PhoneNumber" type="tel" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" readonly>
+                    <p class="text-sm text-gray-500 mt-1">شماره تماس قابل تغییر نیست</p>
+                </div>
+                <div>
+                    <label asp-for="Email" class="block text-sm font-medium text-gray-700">ایمیل</label>
+                    <input asp-for="Email" type="email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <span asp-validation-for="Email" class="text-red-600 text-sm"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Professional Information -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">اطلاعات حرفه‌ای</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label asp-for="Specialization" class="block text-sm font-medium text-gray-700">تخصص</label>
+                    <select asp-for="Specialization" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                        <option value="">انتخاب تخصص</option>
+                        <option value="قلب و عروق">قلب و عروق</option>
+                        <option value="داخلی">داخلی</option>
+                        <option value="اطفال">اطفال</option>
+                        <option value="زنان و زایمان">زنان و زایمان</option>
+                        <option value="ارولوژی">ارولوژی</option>
+                        <option value="عفونی">عفونی</option>
+                        <option value="ریه">ریه</option>
+                        <option value="گوارش">گوارش</option>
+                        <option value="روانپزشکی">روانپزشکی</option>
+                        <option value="پوست">پوست</option>
+                        <option value="ارتوپدی">ارتوپدی</option>
+                        <option value="چشم">چشم</option>
+                        <option value="گوش و حلق و بینی">گوش و حلق و بینی</option>
+                        <option value="مغز و اعصاب">مغز و اعصاب</option>
+                        <option value="جراحی عمومی">جراحی عمومی</option>
+                        <option value="سایر">سایر</option>
+                    </select>
+                    <span asp-validation-for="Specialization" class="text-red-600 text-sm"></span>
+                </div>
+                <div>
+                    <label asp-for="MedicalLicenseNumber" class="block text-sm font-medium text-gray-700">شماره نظام پزشکی</label>
+                    <input asp-for="MedicalLicenseNumber" type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <span asp-validation-for="MedicalLicenseNumber" class="text-red-600 text-sm"></span>
+                </div>
+                <div>
+                    <label asp-for="YearsOfExperience" class="block text-sm font-medium text-gray-700">سال‌های تجربه</label>
+                    <input asp-for="YearsOfExperience" type="number" min="0" max="50" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                    <span asp-validation-for="YearsOfExperience" class="text-red-600 text-sm"></span>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">وضعیت دسترسی</label>
+                    <div class="mt-1 flex items-center space-x-4 space-x-reverse">
+                        <label class="inline-flex items-center">
+                            <input type="radio" asp-for="IsAvailable" value="true" class="form-radio h-4 w-4 text-blue-600">
+                            <span class="mr-2">در دسترس</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" asp-for="IsAvailable" value="false" class="form-radio h-4 w-4 text-blue-600">
+                            <span class="mr-2">غیر قابل دسترس</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bio Section -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">درباره پزشک</h3>
+            <div>
+                <label asp-for="Bio" class="block text-sm font-medium text-gray-700">بیوگرافی</label>
+                <textarea asp-for="Bio" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="درباره خودتان، تجربیات و تخصص‌هایتان بنویسید..."></textarea>
+                <span asp-validation-for="Bio" class="text-red-600 text-sm"></span>
+            </div>
+        </div>
+
+        <!-- Fees Section -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">تعرفه‌ها</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label asp-for="ConsultationFee" class="block text-sm font-medium text-gray-700">هزینه مشاوره (تومان)</label>
+                    <input asp-for="ConsultationFee" type="number" min="0" step="1000" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                    <span asp-validation-for="ConsultationFee" class="text-red-600 text-sm"></span>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">نوع مشاوره‌های ارائه شده</label>
+                    <div class="mt-2 space-y-2">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600">
+                            <span class="mr-2">چت متنی</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600">
+                            <span class="mr-2">تماس صوتی</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600">
+                            <span class="mr-2">تماس تصویری</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600">
+                            <span class="mr-2">حضوری</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <div class="flex justify-end space-x-3 space-x-reverse">
+                <a href="/Doctor/Profile" class="bg-gray-600 text-white px-6 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                    انصراف
+                </a>
+                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    ذخیره تغییرات
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 
