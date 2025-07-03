@@ -3,223 +3,796 @@
     ViewData["Title"] = "پروفایل پزشک";
 }
 
-<div class="px-4 py-6 sm:px-0">
-    <!-- Header -->
-    <div class="mb-8 flex justify-between items-center">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-900">پروفایل پزشک</h1>
-            <p class="text-gray-600 mt-2">مدیریت اطلاعات شخصی و حرفه‌ای</p>
-        </div>
-        <a href="/Doctor/Profile/Edit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            ویرایش پروفایل
-        </a>
-    </div>
-
-    <!-- Profile Picture Section -->
-    <div class="bg-white shadow rounded-lg p-6 mb-6">
-        <div class="flex items-center space-x-6 space-x-reverse">
-            <div class="relative">
-                @if (Model.ProfilePicture != null)
-                {
-                    <img src="/Doctor/Profile/GetProfilePicture" alt="تصویر پروفایل" class="w-24 h-24 rounded-full object-cover border-4 border-gray-200">
-                }
-                else
-                {
-                    <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center border-4 border-gray-200">
-                        <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                    </div>
-                }
-                <button onclick="document.getElementById('profilePictureInput').click()" class="absolute bottom-0 right-0 bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-blue-700">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                    </svg>
-                </button>
-            </div>
-            <div class="flex-1">
-                <h2 class="text-2xl font-bold text-gray-900">@Model.FullName</h2>
-                <p class="text-gray-600">@Model.Specialization</p>
-                <div class="flex items-center mt-2 space-x-4 space-x-reverse">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium @(Model.IsAvailable ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800")">
-                        @(Model.IsAvailable ? "در دسترس" : "غیر قابل دسترس")
-                    </span>
-                    <span class="text-sm text-gray-500">@Model.YearsOfExperience سال تجربه</span>
-                    @if (Model.Rating > 0)
-                    {
-                        <div class="flex items-center space-x-1 space-x-reverse">
-                            <span class="text-sm text-gray-500">@Model.Rating.ToString("F1")</span>
-                            <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+<!-- User-Friendly Profile Page -->
+<div class="profile-container">
+    
+    <!-- Hero Header Section -->
+    <div class="profile-hero">
+        <div class="hero-content">
+            <div class="profile-header">
+                <!-- Profile Picture -->
+                <div class="profile-picture-section">
+                    <div class="picture-container">
+                        @if (Model.ProfilePicture != null)
+                        {
+                            <img src="/Doctor/Profile/GetProfilePicture" alt="تصویر پروفایل" class="profile-image">
+                        }
+                        else
+                        {
+                            <div class="profile-placeholder">
+                                <svg class="user-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                        }
+                        
+                        <button onclick="document.getElementById('profilePictureInput').click()" class="upload-btn">
+                            <svg class="edit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                             </svg>
-                            <span class="text-sm text-gray-500">(@Model.ReviewCount نظر)</span>
+                        </button>
+                        
+                        <div class="status-badge @(Model.IsAvailable ? "online" : "offline")">
+                            @(Model.IsAvailable ? "آنلاین" : "آفلاین")
                         </div>
-                    }
+                    </div>
+                </div>
+                
+                <!-- Profile Info -->
+                <div class="profile-basic-info">
+                    <h1 class="doctor-name">دکتر @Model.FullName</h1>
+                    <p class="specialty">متخصص @Model.Specialization</p>
+                    
+                    <div class="quick-info">
+                        <div class="info-item">
+                            <span class="label">تجربه:</span>
+                            <span class="value">@Model.YearsOfExperience سال</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">هزینه مشاوره:</span>
+                            <span class="value">@Model.ConsultationFee.ToString("N0") تومان</span>
+                        </div>
+                        @if (Model.Rating > 0)
+                        {
+                            <div class="info-item">
+                                <span class="label">امتیاز:</span>
+                                <span class="value">@Model.Rating.ToString("F1") از 5 (@Model.ReviewCount نظر)</span>
+                            </div>
+                        }
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <a href="/Doctor/Profile/Edit" class="btn btn-primary">
+                            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            ویرایش پروفایل
+                        </a>
+                        
+                        <form asp-action="UpdateAvailability" method="post" class="inline-form">
+                            <input type="hidden" name="isAvailable" value="@(!Model.IsAvailable)">
+                            <button type="submit" class="btn @(Model.IsAvailable ? "btn-warning" : "btn-success")">
+                                <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    @if (Model.IsAvailable)
+                                    {
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    }
+                                    else
+                                    {
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    }
+                                </svg>
+                                @(Model.IsAvailable ? "غیرفعال کردن" : "فعال کردن")
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-
+        
         <!-- Upload Form (Hidden) -->
         <form asp-action="UploadProfilePicture" method="post" enctype="multipart/form-data" style="display: none;">
             <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" onchange="this.form.submit()">
         </form>
     </div>
 
-    <!-- Personal Information -->
-    <div class="bg-white shadow rounded-lg p-6 mb-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">اطلاعات شخصی</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <label class="block text-sm font-medium text-gray-700">نام</label>
-                <p class="mt-1 text-sm text-gray-900">@Model.FirstName</p>
+    <!-- Main Content -->
+    <div class="profile-content">
+        
+        <!-- Personal Information -->
+        <div class="content-section">
+            <div class="section-title">
+                <h3>اطلاعات شخصی</h3>
+                <p>اطلاعات هویتی و تماس</p>
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">نام خانوادگی</label>
-                <p class="mt-1 text-sm text-gray-900">@Model.LastName</p>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">شماره تماس</label>
-                <p class="mt-1 text-sm text-gray-900">@Model.PhoneNumber</p>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">ایمیل</label>
-                <p class="mt-1 text-sm text-gray-900">@(string.IsNullOrEmpty(Model.Email) ? "تعیین نشده" : Model.Email)</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Professional Information -->
-    <div class="bg-white shadow rounded-lg p-6 mb-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">اطلاعات حرفه‌ای</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <label class="block text-sm font-medium text-gray-700">تخصص</label>
-                <p class="mt-1 text-sm text-gray-900">@Model.Specialization</p>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">شماره نظام پزشکی</label>
-                <p class="mt-1 text-sm text-gray-900">@(string.IsNullOrEmpty(Model.MedicalLicenseNumber) ? "تعیین نشده" : Model.MedicalLicenseNumber)</p>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">سال‌های تجربه</label>
-                <p class="mt-1 text-sm text-gray-900">@Model.YearsOfExperience سال</p>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">هزینه مشاوره</label>
-                <p class="mt-1 text-sm text-gray-900">@Model.ConsultationFee.ToString("N0") تومان</p>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">وضعیت دسترسی</label>
-                <div class="mt-1 flex items-center space-x-3 space-x-reverse">
-                    <span class="text-sm text-gray-900">@(Model.IsAvailable ? "در دسترس" : "غیر قابل دسترس")</span>
-                    <form asp-action="UpdateAvailability" method="post" class="inline">
-                        <input type="hidden" name="isAvailable" value="@(!Model.IsAvailable)">
-                        <button type="submit" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                            @(Model.IsAvailable ? "غیرفعال کردن" : "فعال کردن")
-                        </button>
-                    </form>
+            
+            <div class="info-cards">
+                <div class="info-card">
+                    <div class="card-icon personal">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h4>نام</h4>
+                        <p>@Model.FirstName</p>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bio Section -->
-    <!-- Consultation Types -->
-    <div class="bg-white shadow rounded-lg p-6 mb-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">نوع مشاوره‌های ارائه شده</h3>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            @if (Model.OffersVoiceCall)
-            {
-                <div class="flex items-center space-x-2 space-x-reverse">
-                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                
+                <div class="info-card">
+                    <div class="card-icon personal">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h4>نام خانوادگی</h4>
+                        <p>@Model.LastName</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="card-icon contact">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                         </svg>
                     </div>
-                    <span class="text-sm text-gray-700">تماس صوتی</span>
-                </div>
-            }
-            @if (Model.OffersVideoCall)
-            {
-                <div class="flex items-center space-x-2 space-x-reverse">
-                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                        <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                        </svg>
-                    </div>
-                    <span class="text-sm text-gray-700">تماس تصویری</span>
-                </div>
-            }
-            @if (Model.OffersInPersonConsultation)
-            {
-                <div class="flex items-center space-x-2 space-x-reverse">
-                    <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
-                        <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                        </svg>
-                    </div>
-                    <span class="text-sm text-gray-700">حضوری</span>
-                </div>
-            }
-        </div>
-    </div>
-
-    @if (!string.IsNullOrEmpty(Model.Bio))
-    {
-        <div class="bg-white shadow rounded-lg p-6 mb-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">درباره پزشک</h3>
-            <p class="text-gray-700 leading-relaxed">@Model.Bio</p>
-        </div>
-    }
-
-    <!-- Statistics -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white shadow rounded-lg p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-                        </svg>
+                    <div class="card-content">
+                        <h4>شماره تماس</h4>
+                        <p>@Model.PhoneNumber</p>
                     </div>
                 </div>
-                <div class="mr-4">
-                    <div class="text-sm font-medium text-gray-500">امتیاز</div>
-                    <div class="text-2xl font-bold text-gray-900">@Model.Rating.ToString("F1")</div>
+                
+                <div class="info-card">
+                    <div class="card-icon contact">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h4>ایمیل</h4>
+                        <p>@(string.IsNullOrEmpty(Model.Email) ? "تعیین نشده" : Model.Email)</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white shadow rounded-lg p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1.586l-4 4z"></path>
+        <!-- Professional Information -->
+        <div class="content-section">
+            <div class="section-title">
+                <h3>اطلاعات حرفه‌ای</h3>
+                <p>تخصص و مدارک پزشکی</p>
+            </div>
+            
+            <div class="info-cards">
+                <div class="info-card featured">
+                    <div class="card-icon specialty">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 9.172V5L8 4z"></path>
                         </svg>
                     </div>
+                    <div class="card-content">
+                        <h4>تخصص</h4>
+                        <p class="specialty-text">@Model.Specialization</p>
+                    </div>
                 </div>
-                <div class="mr-4">
-                    <div class="text-sm font-medium text-gray-500">نظرات</div>
-                    <div class="text-2xl font-bold text-gray-900">@Model.ReviewCount</div>
+                
+                <div class="info-card">
+                    <div class="card-icon professional">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h4>شماره نظام پزشکی</h4>
+                        <p>@(string.IsNullOrEmpty(Model.MedicalLicenseNumber) ? "تعیین نشده" : Model.MedicalLicenseNumber)</p>
+                    </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="bg-white shadow rounded-lg p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                
+                <div class="info-card">
+                    <div class="card-icon professional">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
+                    <div class="card-content">
+                        <h4>سال‌های تجربه</h4>
+                        <p>@Model.YearsOfExperience سال</p>
+                    </div>
                 </div>
-                <div class="mr-4">
-                    <div class="text-sm font-medium text-gray-500">تجربه</div>
-                    <div class="text-2xl font-bold text-gray-900">@Model.YearsOfExperience</div>
+                
+                <div class="info-card">
+                    <div class="card-icon fee">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h4>هزینه مشاوره</h4>
+                        <p>@Model.ConsultationFee.ToString("N0") تومان</p>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Services Offered -->
+        <div class="content-section">
+            <div class="section-title">
+                <h3>خدمات ارائه شده</h3>
+                <p>روش‌های مشاوره موجود</p>
+            </div>
+            
+            <div class="services-grid">
+                @if (Model.OffersVoiceCall)
+                {
+                    <div class="service-card voice">
+                        <div class="service-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                            </svg>
+                        </div>
+                        <h4>تماس صوتی</h4>
+                        <p>مشاوره تلفنی با کیفیت بالا</p>
+                        <span class="status">فعال</span>
+                    </div>
+                }
+                
+                @if (Model.OffersVideoCall)
+                {
+                    <div class="service-card video">
+                        <div class="service-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <h4>تماس تصویری</h4>
+                        <p>ویدئو کال با کیفیت HD</p>
+                        <span class="status">فعال</span>
+                    </div>
+                }
+                
+                @if (Model.OffersInPersonConsultation)
+                {
+                    <div class="service-card inperson">
+                        <div class="service-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                        </div>
+                        <h4>مشاوره حضوری</h4>
+                        <p>ویزیت در مطب یا کلینیک</p>
+                        <span class="status">فعال</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Bio Section -->
+        @if (!string.IsNullOrEmpty(Model.Bio))
+        {
+            <div class="content-section">
+                <div class="section-title">
+                    <h3>درباره دکتر</h3>
+                    <p>معرفی و بیوگرافی</p>
+                </div>
+                
+                <div class="bio-card">
+                    <div class="bio-content">
+                        <p>@Model.Bio</p>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-</div> 
+</div>
+
+<style>
+/* Simple & User-Friendly Profile Page */
+.profile-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+    font-family: 'IRANSans', 'Tahoma', sans-serif;
+}
+
+/* Hero Section */
+.profile-hero {
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+/* Profile Picture */
+.profile-picture-section {
+    position: relative;
+}
+
+.picture-container {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-image, .profile-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.5);
+    object-fit: cover;
+}
+
+.profile-placeholder {
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-icon {
+    width: 50px;
+    height: 50px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.upload-btn {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: #3b82f6;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-btn:hover {
+    background: #2563eb;
+    transform: scale(1.1);
+}
+
+.edit-icon {
+    width: 16px;
+    height: 16px;
+    color: white;
+}
+
+.status-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 2px solid white;
+}
+
+.status-badge.online {
+    background: #10b981;
+    color: white;
+}
+
+.status-badge.offline {
+    background: #ef4444;
+    color: white;
+}
+
+/* Profile Info */
+.profile-basic-info {
+    text-align: center;
+}
+
+.doctor-name {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.specialty {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 1.5rem;
+}
+
+.quick-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.info-item {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 0.75rem 1.25rem;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+}
+
+.label {
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    margin-left: 0.5rem;
+}
+
+.value {
+    color: white;
+    font-weight: 600;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.btn-primary {
+    background: white;
+    color: #3b82f6;
+}
+
+.btn-primary:hover {
+    background: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-warning {
+    background: #fbbf24;
+    color: white;
+}
+
+.btn-warning:hover {
+    background: #f59e0b;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
+}
+
+.btn-success {
+    background: #10b981;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+}
+
+.btn-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.inline-form {
+    display: inline;
+}
+
+/* Main Content */
+.profile-content {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.content-section {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.content-section:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.section-title {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    text-align: center;
+}
+
+.section-title h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+.section-title p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin: 0;
+}
+
+/* Info Cards */
+.info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
+.info-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 2px solid #f1f5f9;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.info-card:hover {
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+}
+
+.info-card.featured {
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+}
+
+.card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.card-icon.personal {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.card-icon.contact {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.card-icon.professional {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.card-icon.specialty {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.card-icon.fee {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.card-icon svg {
+    width: 24px;
+    height: 24px;
+    color: white;
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-content h4 {
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 0.5rem 0;
+}
+
+.card-content p {
+    font-size: 1.1rem;
+    color: #1e293b;
+    font-weight: 600;
+    margin: 0;
+}
+
+.specialty-text {
+    font-size: 1.2rem !important;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Services Grid */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
+.service-card {
+    text-align: center;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 2px solid #f1f5f9;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.service-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.service-card.voice {
+    border-color: #10b981;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0.05) 100%);
+}
+
+.service-card.video {
+    border-color: #8b5cf6;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+}
+
+.service-card.inperson {
+    border-color: #f59e0b;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(217, 119, 6, 0.05) 100%);
+}
+
+.service-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+.service-card.voice .service-icon {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.service-card.video .service-icon {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.service-card.inperson .service-icon {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.service-icon svg {
+    width: 30px;
+    height: 30px;
+    color: white;
+}
+
+.service-card h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 0.5rem 0;
+}
+
+.service-card p {
+    color: #64748b;
+    margin: 0 0 1rem 0;
+    line-height: 1.5;
+}
+
+.status {
+    background: #10b981;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* Bio Section */
+.bio-card {
+    padding: 2rem;
+}
+
+.bio-content {
+    background: #f8fafc;
+    padding: 2rem;
+    border-radius: 12px;
+    border-right: 4px solid #3b82f6;
+    line-height: 1.8;
+    color: #374151;
+    text-align: justify;
+    font-size: 1.05rem;
+}
+
+/* Responsive Design */
+@@media (max-width: 768px) {
+    .profile-hero {
+        padding: 1.5rem;
+    }
+    
+    .doctor-name {
+        font-size: 2rem;
+    }
+    
+    .quick-info {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .info-cards, .services-grid {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+    }
+    
+    .profile-content {
+        padding: 1rem;
+    }
+}
+
+@@media (max-width: 480px) {
+    .doctor-name {
+        font-size: 1.8rem;
+    }
+    
+    .info-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .service-card {
+        padding: 1.5rem;
+    }
+}
+
+/* Simple Animations */
+.profile-container {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+</style> 
