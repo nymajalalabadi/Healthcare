@@ -79,6 +79,13 @@ public class ProfileController : Controller
             doctor.MedicalLicenseNumber = model.MedicalLicenseNumber;
             doctor.Bio = model.Bio;
             doctor.YearsOfExperience = model.YearsOfExperience;
+            doctor.ConsultationFee = model.ConsultationFee;
+            
+            // Update consultation types offered
+            doctor.OffersVoiceCall = model.OffersVoiceCall;
+            doctor.OffersVideoCall = model.OffersVideoCall;
+            doctor.OffersInPersonConsultation = model.OffersInPersonConsultation;
+            
             doctor.UpdatedAt = DateTime.UtcNow;
 
             await _doctorRepository.UpdateAsync(doctor);

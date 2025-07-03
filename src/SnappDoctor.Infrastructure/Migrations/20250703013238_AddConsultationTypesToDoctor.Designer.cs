@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SnappDoctor.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SnappDoctor.Infrastructure.Data;
 namespace SnappDoctor.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250703013238_AddConsultationTypesToDoctor")]
+    partial class AddConsultationTypesToDoctor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -266,6 +269,9 @@ namespace SnappDoctor.Infrastructure.Migrations
                     b.Property<bool>("OffersInPersonConsultation")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("OffersTextChat")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("OffersVideoCall")
                         .HasColumnType("bit");
 
@@ -327,7 +333,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                             Id = 1,
                             Bio = "متخصص زنان و زایمان با بیش از 10 سال تجربه",
                             ConsultationFee = 150000m,
-                            CreatedAt = new DateTime(2025, 7, 3, 1, 41, 3, 878, DateTimeKind.Utc).AddTicks(5614),
+                            CreatedAt = new DateTime(2025, 7, 3, 1, 32, 37, 986, DateTimeKind.Utc).AddTicks(7178),
                             Email = "sara.sadeghi@example.com",
                             FirstName = "دکتر سارا",
                             IsActive = true,
@@ -335,6 +341,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                             LastName = "صادقی",
                             MedicalLicenseNumber = "12345",
                             OffersInPersonConsultation = false,
+                            OffersTextChat = true,
                             OffersVideoCall = true,
                             OffersVoiceCall = true,
                             PhoneNumber = "09123456789",
@@ -348,7 +355,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                             Id = 2,
                             Bio = "پزشک عمومی با تجربه در مشاوره‌های آنلاین",
                             ConsultationFee = 150000m,
-                            CreatedAt = new DateTime(2025, 7, 3, 1, 41, 3, 878, DateTimeKind.Utc).AddTicks(5622),
+                            CreatedAt = new DateTime(2025, 7, 3, 1, 32, 37, 986, DateTimeKind.Utc).AddTicks(7185),
                             Email = "mohammad.farzipour@example.com",
                             FirstName = "دکتر محمد",
                             IsActive = true,
@@ -356,6 +363,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                             LastName = "فرضی‌پور",
                             MedicalLicenseNumber = "54321",
                             OffersInPersonConsultation = false,
+                            OffersTextChat = true,
                             OffersVideoCall = true,
                             OffersVoiceCall = true,
                             PhoneNumber = "09123456790",
@@ -369,7 +377,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                             Id = 3,
                             Bio = "متخصص بیماری‌های داخلی",
                             ConsultationFee = 150000m,
-                            CreatedAt = new DateTime(2025, 7, 3, 1, 41, 3, 878, DateTimeKind.Utc).AddTicks(5624),
+                            CreatedAt = new DateTime(2025, 7, 3, 1, 32, 37, 986, DateTimeKind.Utc).AddTicks(7187),
                             Email = "milad.mozaffari@example.com",
                             FirstName = "دکتر میلاد",
                             IsActive = true,
@@ -377,6 +385,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                             LastName = "مظفری",
                             MedicalLicenseNumber = "67890",
                             OffersInPersonConsultation = false,
+                            OffersTextChat = true,
                             OffersVideoCall = true,
                             OffersVoiceCall = true,
                             PhoneNumber = "09123456791",

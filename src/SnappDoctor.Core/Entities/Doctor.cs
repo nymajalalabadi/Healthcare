@@ -16,6 +16,12 @@ public class Doctor
     public string Bio { get; set; } = string.Empty;
     public int YearsOfExperience { get; set; }
     public decimal ConsultationFee { get; set; } = 150000; // Default consultation fee in Toman
+    
+    // Consultation Types Offered
+    public bool OffersVoiceCall { get; set; } = true;
+    public bool OffersVideoCall { get; set; } = true;
+    public bool OffersInPersonConsultation { get; set; } = false;
+    
     public decimal Rating { get; set; }
     public int ReviewCount { get; set; }
     public bool IsAvailable { get; set; } = true;
