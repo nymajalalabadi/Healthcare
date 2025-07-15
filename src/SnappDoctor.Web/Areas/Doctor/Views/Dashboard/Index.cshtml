@@ -42,7 +42,7 @@
                     <!-- Status Toggle -->
                     <div class="status-toggle-container">
                         <form asp-action="UpdateAvailability" method="post" class="inline">
-                            <input type="hidden" name="isAvailable" value="@(!Model.IsAvailable)" />
+                            <input type="hidden" name="isAvailable" value="@((!Model.IsAvailable).ToString())" />
                             <div class="status-toggle @(Model.IsAvailable ? "available" : "offline")">
                                 <div class="status-indicator">
                                     <div class="status-pulse @(Model.IsAvailable ? "pulse-green" : "pulse-red")"></div>

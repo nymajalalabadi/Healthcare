@@ -91,7 +91,7 @@ public class DashboardController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> UpdateAvailability(bool isAvailable)
+    public async Task<IActionResult> UpdateAvailability(bool isAvailable, string returnUrl = null)
     {
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
@@ -111,6 +111,13 @@ public class DashboardController : Controller
         await _doctorRepository.UpdateAsync(doctor);
         
         TempData["Success"] = isAvailable ? "وضعیت شما به دردسترس تغییر یافت" : "وضعیت شما به غیردردسترس تغییر یافت";
+        
+        // If returnUrl is provided, redirect to it, otherwise to Index
+        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+        {
+            return Redirect(returnUrl);
+        }
+        
         return RedirectToAction("Index");
     }
 } 

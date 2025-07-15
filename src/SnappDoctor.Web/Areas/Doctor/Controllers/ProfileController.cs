@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SnappDoctor.Application.Contracts;
+using SnappDoctor.Application.DTOs.Doctor;
 using SnappDoctor.Core.Entities;
 
 namespace SnappDoctor.Web.Areas.Doctor.Controllers;
@@ -13,15 +14,18 @@ public class ProfileController : Controller
     private readonly IDoctorRepository _doctorRepository;
     private readonly UserManager<SnappDoctor.Core.Entities.User> _userManager;
     private readonly IWebHostEnvironment _environment;
+    private readonly IScheduleService _scheduleService;
 
     public ProfileController(
         IDoctorRepository doctorRepository,
         UserManager<SnappDoctor.Core.Entities.User> userManager,
-        IWebHostEnvironment environment)
+        IWebHostEnvironment environment,
+        IScheduleService scheduleService)
     {
         _doctorRepository = doctorRepository;
         _userManager = userManager;
         _environment = environment;
+        _scheduleService = scheduleService;
     }
 
     private async Task<SnappDoctor.Core.Entities.Doctor?> GetCurrentDoctorAsync()
@@ -86,6 +90,9 @@ public class ProfileController : Controller
             doctor.OffersVideoCall = model.OffersVideoCall;
             doctor.OffersInPersonConsultation = model.OffersInPersonConsultation;
             
+            // Update availability status
+            doctor.IsAvailable = model.IsAvailable;
+            
             doctor.UpdatedAt = DateTime.UtcNow;
 
             await _doctorRepository.UpdateAsync(doctor);
@@ -110,7 +117,7 @@ public class ProfileController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> UpdateAvailability(bool isAvailable)
+    public async Task<IActionResult> UpdateAvailability(bool isAvailable, string returnUrl = null)
     {
         var doctor = await GetCurrentDoctorAsync();
         if (doctor == null)
@@ -124,6 +131,20 @@ public class ProfileController : Controller
         await _doctorRepository.UpdateAsync(doctor);
         
         TempData["Success"] = isAvailable ? "وضعیت شما به در دسترس تغییر یافت" : "وضعیت شما به غیر قابل دسترس تغییر یافت";
+        
+        // If returnUrl is provided, redirect to it, otherwise to Index
+        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+        {
+            return Redirect(returnUrl);
+        }
+        
+        // Check if the request came from Schedule page
+        var referer = Request.Headers["Referer"].ToString();
+        if (referer.Contains("/Schedule"))
+        {
+            return RedirectToAction("Schedule");
+        }
+        
         return RedirectToAction("Index");
     }
 
@@ -210,9 +231,54 @@ public class ProfileController : Controller
             return RedirectToAction("Login", "Auth", new { area = "" });
         }
 
-        // This would contain schedule management logic
-        // For now, return a basic view
-        return View(doctor);
+        // Initialize default schedule if doesn't exist
+        await _scheduleService.InitializeDefaultScheduleAsync(doctor.Id);
+
+        // Load schedule data
+        var schedules = await _scheduleService.GetDoctorScheduleAsync(doctor.Id);
+        var breakTimes = await _scheduleService.GetDoctorBreakTimesAsync(doctor.Id);
+        var timeSettings = await _scheduleService.GetDoctorTimeSettingsAsync(doctor.Id);
+
+        // Create view model
+        var viewModel = new ScheduleViewModel
+        {
+            Doctor = doctor,
+            Schedules = schedules,
+            BreakTimes = breakTimes,
+            TimeSettings = timeSettings ?? new DoctorTimeSettingsDto { DoctorId = doctor.Id }
+        };
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateSchedule([FromBody] UpdateScheduleDto updateDto)
+    {
+        if (updateDto == null)
+        {
+            return Json(new { success = false, message = "داده‌های ارسالی معتبر نیستند" });
+        }
+
+        var doctor = await GetCurrentDoctorAsync();
+        if (doctor == null)
+        {
+            return Json(new { success = false, message = "دکتر یافت نشد" });
+        }
+
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+            return Json(new { success = false, message = string.Join(", ", errors) });
+        }
+
+        var result = await _scheduleService.UpdateDoctorScheduleAsync(doctor.Id, updateDto);
+        
+        if (result)
+        {
+            return Json(new { success = true, message = "برنامه زمانی با موفقیت بروزرسانی شد" });
+        }
+        
+        return Json(new { success = false, message = "خطا در بروزرسانی برنامه زمانی" });
     }
 
     [HttpGet]

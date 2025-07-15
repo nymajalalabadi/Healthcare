@@ -1,5 +1,5 @@
 namespace SnappDoctor.Core.Enums;
-
+ 
 public enum UserType
 {
     RegularUser = 1,

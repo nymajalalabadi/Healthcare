@@ -32,4 +32,7 @@ public class Doctor
     // Navigation properties
     public virtual User? User { get; set; }
     public virtual ICollection<Consultation> Consultations { get; set; } = new List<Consultation>();
+    public virtual ICollection<DoctorSchedule> Schedules { get; set; } = new List<DoctorSchedule>();
+    public virtual ICollection<DoctorBreakTime> BreakTimes { get; set; } = new List<DoctorBreakTime>();
+    public virtual DoctorTimeSettings? TimeSettings { get; set; }
 } 

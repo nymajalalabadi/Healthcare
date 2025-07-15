@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SnappDoctor.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SnappDoctor.Infrastructure.Data;
 namespace SnappDoctor.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250715032202_AddDoctorSchedules")]
+    partial class AddDoctorSchedules
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -327,7 +330,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                             Id = 1,
                             Bio = "متخصص زنان و زایمان با بیش از 10 سال تجربه",
                             ConsultationFee = 150000m,
-                            CreatedAt = new DateTime(2025, 7, 15, 3, 35, 48, 326, DateTimeKind.Utc).AddTicks(2966),
+                            CreatedAt = new DateTime(2025, 7, 15, 3, 22, 1, 618, DateTimeKind.Utc).AddTicks(3170),
                             Email = "sara.sadeghi@example.com",
                             FirstName = "دکتر سارا",
                             IsActive = true,
@@ -348,7 +351,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                             Id = 2,
                             Bio = "پزشک عمومی با تجربه در مشاوره‌های آنلاین",
                             ConsultationFee = 150000m,
-                            CreatedAt = new DateTime(2025, 7, 15, 3, 35, 48, 326, DateTimeKind.Utc).AddTicks(2974),
+                            CreatedAt = new DateTime(2025, 7, 15, 3, 22, 1, 618, DateTimeKind.Utc).AddTicks(3178),
                             Email = "mohammad.farzipour@example.com",
                             FirstName = "دکتر محمد",
                             IsActive = true,
@@ -369,7 +372,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                             Id = 3,
                             Bio = "متخصص بیماری‌های داخلی",
                             ConsultationFee = 150000m,
-                            CreatedAt = new DateTime(2025, 7, 15, 3, 35, 48, 326, DateTimeKind.Utc).AddTicks(2976),
+                            CreatedAt = new DateTime(2025, 7, 15, 3, 22, 1, 618, DateTimeKind.Utc).AddTicks(3181),
                             Email = "milad.mozaffari@example.com",
                             FirstName = "دکتر میلاد",
                             IsActive = true,

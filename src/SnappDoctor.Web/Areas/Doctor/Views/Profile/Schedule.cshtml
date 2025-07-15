@@ -1,198 +1,1191 @@
-@model SnappDoctor.Core.Entities.Doctor
+@model SnappDoctor.Application.DTOs.Doctor.ScheduleViewModel
+
 @{
     ViewData["Title"] = "مدیریت برنامه زمانی";
 }
 
-<div class="px-4 py-6 sm:px-0">
-    <!-- Header -->
-    <div class="mb-8 flex justify-between items-center">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-900">مدیریت برنامه زمانی</h1>
-            <p class="text-gray-600 mt-2">تنظیم ساعات کاری و دسترسی</p>
-        </div>
-        <a href="/Doctor/Profile" class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
-            بازگشت
-        </a>
-    </div>
-
-    <!-- Current Status -->
-    <div class="bg-white shadow rounded-lg p-6 mb-6">
-        <div class="flex items-center justify-between">
-            <div>
-                <h3 class="text-lg font-medium text-gray-900">وضعیت فعلی</h3>
-                <p class="text-gray-600">وضعیت دسترسی جهت پذیرش مشاوره</p>
-            </div>
-            <div class="flex items-center space-x-3 space-x-reverse">
-                <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium @(Model.IsAvailable ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800")">
-                    @(Model.IsAvailable ? "در دسترس" : "غیر قابل دسترس")
-                </span>
-                <form asp-controller="Profile" asp-action="UpdateAvailability" method="post" class="inline">
-                    <input type="hidden" name="isAvailable" value="@(!Model.IsAvailable)">
-                    <button type="submit" class="@(Model.IsAvailable ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700") text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                        @(Model.IsAvailable ? "غیرفعال کردن" : "فعال کردن")
-                    </button>
-                </form>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header Section -->
+        <div class="mb-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <h1 class="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                            مدیریت برنامه زمانی
+                        </h1>
+                    </div>
+                    <p class="text-gray-600 mr-13">تنظیم ساعات کاری، نوع مشاوره‌ها و دسترسی آنلاین</p>
+                </div>
+                <a href="/Doctor/Profile" class="inline-flex items-center gap-2 bg-white text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-50 border border-gray-200 transition-all duration-200 shadow-sm hover:shadow-md">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    بازگشت به پروفایل
+                </a>
             </div>
         </div>
-    </div>
 
-    <!-- Weekly Schedule -->
-    <div class="bg-white shadow rounded-lg p-6 mb-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-6">برنامه هفتگی</h3>
-        <div class="space-y-4">
-            @{
-                var weekDays = new List<(string Persian, string English)>
-                {
-                    ("شنبه", "Saturday"),
-                    ("یکشنبه", "Sunday"),
-                    ("دوشنبه", "Monday"),
-                    ("سه‌شنبه", "Tuesday"),
-                    ("چهارشنبه", "Wednesday"),
-                    ("پنج‌شنبه", "Thursday"),
-                    ("جمعه", "Friday")
-                };
+        <!-- Quick Status Toggle -->
+        <div class="mb-8">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full @(Model.Doctor.IsAvailable ? "bg-green-100" : "bg-red-100") flex items-center justify-center">
+                            @if (Model.Doctor.IsAvailable)
+                            {
+                                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            }
+                            else
+                            {
+                                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            }
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-900">وضعیت دسترسی</h3>
+                            <p class="text-gray-600">
+                                شما در حال حاضر 
+                                <span class="font-medium @(Model.Doctor.IsAvailable ? "text-green-600" : "text-red-600")">
+                                    @(Model.Doctor.IsAvailable ? "آنلاین و آماده پذیرش مشاوره" : "آفلاین")
+                                </span>
+                                هستید
+                            </p>
+                        </div>
+                    </div>
+                    <form asp-controller="Profile" asp-action="UpdateAvailability" method="post" class="inline">
+                        <input type="hidden" name="isAvailable" value="@((!Model.Doctor.IsAvailable).ToString())">
+                        <input type="hidden" name="returnUrl" value="@Url.Action("Schedule", "Profile", new { area = "Doctor" })">
+                        <button type="submit" class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent @(Model.Doctor.IsAvailable ? "bg-green-600" : "bg-gray-200") transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" role="switch" aria-checked="@Model.Doctor.IsAvailable.ToString().ToLower()">
+                            <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out @(Model.Doctor.IsAvailable ? "translate-x-5" : "translate-x-0")"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            <!-- Weekly Schedule - Takes 2 columns -->
+            <div class="xl:col-span-2">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900">برنامه هفتگی</h3>
+                    </div>
+                    
+                    <div id="scheduleForm">
+                        <div class="space-y-4">
+                            @{
+                                var weekDays = new List<(string Persian, DayOfWeek DayOfWeek, string Icon)>
+                                {
+                                    ("شنبه", DayOfWeek.Saturday, "🗓️"),
+                                    ("یکشنبه", DayOfWeek.Sunday, "📅"),
+                                    ("دوشنبه", DayOfWeek.Monday, "📊"),
+                                    ("سه‌شنبه", DayOfWeek.Tuesday, "💼"),
+                                    ("چهارشنبه", DayOfWeek.Wednesday, "⚡"),
+                                    ("پنج‌شنبه", DayOfWeek.Thursday, "🎯"),
+                                    ("جمعه", DayOfWeek.Friday, "🌅")
+                                };
+                            }
+                            
+                            @foreach (var day in weekDays)
+                            {
+                                var schedule = Model.Schedules.FirstOrDefault(s => s.DayOfWeek == day.DayOfWeek);
+                                var isActive = schedule?.IsActive ?? false;
+                                var startTime = schedule?.StartTime.ToString("HH:mm") ?? "09:00";
+                                var endTime = schedule?.EndTime.ToString("HH:mm") ?? "17:00";
+                                
+                                <div class="group bg-gray-50 hover:bg-gray-100 rounded-xl p-4 transition-all duration-200" data-day="@((int)day.DayOfWeek)">
+                                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                        <div class="flex items-center gap-3">
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" 
+                                                       class="sr-only peer schedule-day-toggle" 
+                                                       data-day="@((int)day.DayOfWeek)"
+                                                       @(isActive ? "checked" : "")>
+                                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                            </label>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-lg">@day.Icon</span>
+                                                <label class="font-medium text-gray-900 cursor-pointer">@day.Persian</label>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3 text-sm">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-gray-500">از</span>
+                                                <select class="bg-white border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors schedule-time-input"
+                                                        data-day="@((int)day.DayOfWeek)" data-type="start">
+                                                    @for (int hour = 6; hour <= 23; hour++)
+                                                    {
+                                                        var timeValue = $"{hour:D2}:00";
+                                                        <option value="@timeValue" selected="@(timeValue == startTime)">@timeValue</option>
+                                                        if (hour < 23)
+                                                        {
+                                                            var halfTimeValue = $"{hour:D2}:30";
+                                                            <option value="@halfTimeValue" selected="@(halfTimeValue == startTime)">@halfTimeValue</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-gray-500">تا</span>
+                                                <select class="bg-white border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors schedule-time-input"
+                                                        data-day="@((int)day.DayOfWeek)" data-type="end">
+                                                    @for (int hour = 6; hour <= 23; hour++)
+                                                    {
+                                                        var timeValue = $"{hour:D2}:00";
+                                                        <option value="@timeValue" selected="@(timeValue == endTime)">@timeValue</option>
+                                                        if (hour < 23)
+                                                        {
+                                                            var halfTimeValue = $"{hour:D2}:30";
+                                                            <option value="@halfTimeValue" selected="@(halfTimeValue == endTime)">@halfTimeValue</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end">
+                        <button type="button" id="saveScheduleButton" class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 shadow-sm hover:shadow-md">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            ذخیره برنامه هفتگی
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Panel -->
+            <div class="space-y-6">
+                <!-- Consultation Types -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6" id="consultationTypesPanel">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900">نوع مشاوره‌ها</h3>
+                        <div class="mr-auto text-xs text-gray-500" id="consultationTypeStatus">
+                            @{
+                                var activeTypesCount = 0;
+                                if (Model.Doctor.OffersVoiceCall) activeTypesCount++;
+                                if (Model.Doctor.OffersVideoCall) activeTypesCount++;
+                                if (Model.Doctor.OffersInPersonConsultation) activeTypesCount++;
+                            }
+                            @activeTypesCount از ۳ فعال
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="consultation-type-item border @(Model.Doctor.OffersVoiceCall ? "border-green-200 bg-green-50" : "border-gray-200 bg-gray-50") rounded-lg p-3 transition-all duration-200">
+                            <label class="flex items-center cursor-pointer w-full">
+                                <div class="relative">
+                                    <input type="checkbox" 
+                                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 consultation-type" 
+                                           data-type="OffersVoiceCall"
+                                           @(Model.Doctor.OffersVoiceCall ? "checked" : "")>
+                                    <div class="absolute -inset-1 rounded bg-blue-200 opacity-0 transition-opacity consultation-type-glow"></div>
+                                </div>
+                                <div class="mr-3 flex items-center gap-3 flex-1">
+                                    <span class="text-2xl consultation-type-icon">📞</span>
+                                    <div class="flex-1">
+                                        <div class="text-sm font-medium text-gray-900 consultation-type-title">تماس صوتی</div>
+                                        <div class="text-xs text-gray-500 consultation-type-description">مشاوره تلفنی</div>
+                                    </div>
+                                    <div class="consultation-type-status">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium @(Model.Doctor.OffersVoiceCall ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-500")">
+                                            @(Model.Doctor.OffersVoiceCall ? "فعال" : "غیرفعال")
+                                        </span>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="consultation-type-item border @(Model.Doctor.OffersVideoCall ? "border-green-200 bg-green-50" : "border-gray-200 bg-gray-50") rounded-lg p-3 transition-all duration-200">
+                            <label class="flex items-center cursor-pointer w-full">
+                                <div class="relative">
+                                    <input type="checkbox" 
+                                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 consultation-type" 
+                                           data-type="OffersVideoCall"
+                                           @(Model.Doctor.OffersVideoCall ? "checked" : "")>
+                                    <div class="absolute -inset-1 rounded bg-blue-200 opacity-0 transition-opacity consultation-type-glow"></div>
+                                </div>
+                                <div class="mr-3 flex items-center gap-3 flex-1">
+                                    <span class="text-2xl consultation-type-icon">📹</span>
+                                    <div class="flex-1">
+                                        <div class="text-sm font-medium text-gray-900 consultation-type-title">تماس تصویری</div>
+                                        <div class="text-xs text-gray-500 consultation-type-description">ویدیو کال</div>
+                                    </div>
+                                    <div class="consultation-type-status">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium @(Model.Doctor.OffersVideoCall ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-500")">
+                                            @(Model.Doctor.OffersVideoCall ? "فعال" : "غیرفعال")
+                                        </span>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="consultation-type-item border @(Model.Doctor.OffersInPersonConsultation ? "border-green-200 bg-green-50" : "border-gray-200 bg-gray-50") rounded-lg p-3 transition-all duration-200">
+                            <label class="flex items-center cursor-pointer w-full">
+                                <div class="relative">
+                                    <input type="checkbox" 
+                                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 consultation-type" 
+                                           data-type="OffersInPersonConsultation"
+                                           @(Model.Doctor.OffersInPersonConsultation ? "checked" : "")>
+                                    <div class="absolute -inset-1 rounded bg-blue-200 opacity-0 transition-opacity consultation-type-glow"></div>
+                                </div>
+                                <div class="mr-3 flex items-center gap-3 flex-1">
+                                    <span class="text-2xl consultation-type-icon">🏥</span>
+                                    <div class="flex-1">
+                                        <div class="text-sm font-medium text-gray-900 consultation-type-title">حضوری</div>
+                                        <div class="text-xs text-gray-500 consultation-type-description">ویزیت در مطب</div>
+                                    </div>
+                                    <div class="consultation-type-status">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium @(Model.Doctor.OffersInPersonConsultation ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-500")">
+                                            @(Model.Doctor.OffersInPersonConsultation ? "فعال" : "غیرفعال")
+                                        </span>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <div class="flex items-start gap-2">
+                            <svg class="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <div class="text-xs text-blue-700">
+                                <strong>توصیه:</strong> برای جذب بیماران بیشتر، حداقل دو نوع مشاوره را فعال کنید.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consultation Fee -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6" id="consultationFeePanel">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900">هزینه مشاوره</h3>
+                        <div class="mr-auto">
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800" id="feeStatus">
+                                @(Model.Doctor.ConsultationFee > 0 ? $"{Model.Doctor.ConsultationFee:N0} تومان" : "تعیین نشده")
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="relative">
+                            <input type="number" 
+                                   id="consultationFeeInput"
+                                   value="@Model.Doctor.ConsultationFee" 
+                                   class="block w-full pl-16 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg font-medium consultation-fee-input" 
+                                   min="0" 
+                                   step="10000"
+                                   placeholder="150000"
+                                   data-original-value="@Model.Doctor.ConsultationFee">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                <span class="text-gray-500 text-sm">تومان</span>
+                            </div>
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="text-gray-400 text-xs fee-change-indicator opacity-0">تغییر یافت</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Fee Buttons -->
+                        <div class="grid grid-cols-3 gap-2">
+                            @{
+                                var suggestedFees = new[] { 100000, 150000, 200000 };
+                            }
+                            @foreach (var fee in suggestedFees)
+                            {
+                                <button type="button" 
+                                        class="quick-fee-btn px-3 py-2 text-xs border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                                        data-fee="@fee">
+                                    @fee.ToString("N0")
+                                </button>
+                            }
+                        </div>
+                        
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <div class="flex items-center gap-2 text-xs text-gray-600">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span>💡 میانگین بازار: ۱۰۰-۳۰۰ هزار تومان</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Time Settings -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6" id="timeSettingsPanel">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900">تنظیمات زمانی</h3>
+                        <div class="mr-auto text-xs text-gray-500" id="timeSettingsStatus">
+                            @Model.TimeSettings.ConsultationDurationMinutes دقیقه | حداکثر @Model.TimeSettings.MaxDailyConsultations نوبت
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="time-setting-item">
+                            <label class="block text-sm font-medium text-gray-700 mb-3">
+                                <span class="flex items-center gap-2">
+                                    <span>مدت مشاوره</span>
+                                    <span class="text-xs text-gray-500">(دقیقه)</span>
+                                    <span class="mr-auto text-xs font-normal text-blue-600" id="durationDisplay">@Model.TimeSettings.ConsultationDurationMinutes دقیقه</span>
+                                </span>
+                            </label>
+                            <select id="consultationDurationSelect" 
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 time-setting-select"
+                                    data-setting="duration">
+                                @{
+                                    var durations = new[] { 15, 30, 45, 60 };
+                                    var durationIcons = new[] { "⚡", "⏰", "🕐", "🕑" };
+                                }
+                                @for (int i = 0; i < durations.Length; i++)
+                                {
+                                    var duration = durations[i];
+                                    var icon = durationIcons[i];
+                                    <option value="@duration" selected="@(Model.TimeSettings.ConsultationDurationMinutes == duration)">
+                                        @icon @duration دقیقه
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        
+                        <div class="time-setting-item">
+                            <label class="block text-sm font-medium text-gray-700 mb-3">
+                                <span class="flex items-center gap-2">
+                                    <span>فاصله بین نوبت‌ها</span>
+                                    <span class="text-xs text-gray-500">(دقیقه)</span>
+                                    <span class="mr-auto text-xs font-normal text-blue-600" id="breakDisplay">
+                                        @(Model.TimeSettings.BreakBetweenConsultationsMinutes == 0 ? "بدون فاصله" : $"{Model.TimeSettings.BreakBetweenConsultationsMinutes} دقیقه")
+                                    </span>
+                                </span>
+                            </label>
+                            <select id="breakBetweenSelect" 
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 time-setting-select"
+                                    data-setting="break">
+                                @{
+                                    var breaks = new[] { 0, 5, 10, 15 };
+                                    var breakIcons = new[] { "🚫", "⏱️", "⏰", "🔔" };
+                                    var breakLabels = new[] { "بدون فاصله", "۵ دقیقه", "۱۰ دقیقه", "۱۵ دقیقه" };
+                                }
+                                @for (int i = 0; i < breaks.Length; i++)
+                                {
+                                    var breakTime = breaks[i];
+                                    var icon = breakIcons[i];
+                                    var label = breakLabels[i];
+                                    <option value="@breakTime" selected="@(Model.TimeSettings.BreakBetweenConsultationsMinutes == breakTime)">
+                                        @icon @label
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        
+                        <div class="time-setting-item">
+                            <label class="block text-sm font-medium text-gray-700 mb-3">
+                                <span class="flex items-center gap-2">
+                                    <span>حداکثر نوبت روزانه</span>
+                                    <span class="mr-auto text-xs font-normal text-blue-600" id="maxConsultationsDisplay">@Model.TimeSettings.MaxDailyConsultations نوبت</span>
+                                </span>
+                            </label>
+                            <div class="relative">
+                                <input type="number" 
+                                       id="maxConsultationsInput"
+                                       value="@Model.TimeSettings.MaxDailyConsultations" 
+                                       class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-16 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 time-setting-input" 
+                                       min="1" 
+                                       max="50"
+                                       data-setting="max-consultations"
+                                       data-original-value="@Model.TimeSettings.MaxDailyConsultations">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 text-sm">نوبت</span>
+                                </div>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">
+                                💡 پیشنهاد: بین ۱۰ تا ۲۰ نوبت برای تعادل بین درآمد و کیفیت
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Calculated Statistics -->
+                    <div class="mt-6 p-4 bg-purple-50 rounded-lg border border-purple-200">
+                        <h4 class="text-sm font-medium text-purple-900 mb-3">📊 آمار محاسبه‌شده:</h4>
+                        <div class="grid grid-cols-2 gap-4 text-xs">
+                            <div class="bg-white rounded-md p-2">
+                                <div class="text-gray-500">حداکثر ساعت کاری روزانه</div>
+                                <div class="font-medium text-purple-700" id="maxWorkingHours">
+                                    @{
+                                        var totalMinutes = Model.TimeSettings.MaxDailyConsultations * (Model.TimeSettings.ConsultationDurationMinutes + Model.TimeSettings.BreakBetweenConsultationsMinutes);
+                                        var hours = totalMinutes / 60.0;
+                                    }
+                                    @hours.ToString("F1") ساعت
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-md p-2">
+                                <div class="text-gray-500">درآمد روزانه تقریبی</div>
+                                <div class="font-medium text-purple-700" id="dailyIncome">
+                                    @((Model.TimeSettings.MaxDailyConsultations * Model.Doctor.ConsultationFee).ToString("N0")) تومان
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save All Settings -->
+                <button type="button" 
+                        id="saveAllButton"
+                        class="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-4 rounded-xl hover:from-green-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-lg font-medium save-all-button">
+                    <svg class="w-5 h-5 save-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span id="saveButtonText">ذخیره تمام تنظیمات</span>
+                    <div class="save-progress hidden ml-2">
+                        <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Break Times Section -->
+        <div class="mt-8">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900">زمان‌های استراحت</h3>
+                    <span class="text-sm text-gray-500">⚡ اختیاری</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @{
+                        var breakTypeConfigs = new List<(string Type, string Title, string Icon, string DefaultStart, string DefaultEnd)>
+                        {
+                            ("Lunch", "ناهار", "🍽️", "12:30", "13:30"),
+                            ("Prayer", "نماز", "🕌", "18:00", "18:15"),
+                            ("Custom", "استراحت", "☕", "15:00", "15:30")
+                        };
+                    }
+                    
+                    @foreach (var config in breakTypeConfigs)
+                    {
+                        var breakTime = Model.BreakTimes.FirstOrDefault(bt => bt.BreakType == config.Type);
+                        var isActive = breakTime?.IsActive ?? false;
+                        var startTime = breakTime?.StartTime.ToString("HH:mm") ?? config.DefaultStart;
+                        var endTime = breakTime?.EndTime.ToString("HH:mm") ?? config.DefaultEnd;
+                        
+                        <div class="bg-gradient-to-br from-orange-50 to-yellow-50 rounded-xl p-4 border border-orange-100" data-break-type="@config.Type">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-lg">@config.Icon</span>
+                                    <span class="font-medium text-gray-900">@config.Title</span>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" 
+                                           class="sr-only peer break-toggle" 
+                                           data-break-type="@config.Type"
+                                           @(isActive ? "checked" : "")>
+                                    <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-orange-600"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm">
+                                <select class="flex-1 bg-white border border-orange-200 rounded-md px-2 py-1 text-xs break-time-input"
+                                        data-break-type="@config.Type" data-time-type="start">
+                                    @for (int hour = 6; hour <= 23; hour++)
+                                    {
+                                        for (int minute = 0; minute < 60; minute += 15)
+                                        {
+                                            var timeValue = $"{hour:D2}:{minute:D2}";
+                                            <option value="@timeValue" selected="@(timeValue == startTime)">@timeValue</option>
+                                        }
+                                    }
+                                </select>
+                                <span class="text-gray-500">تا</span>
+                                <select class="flex-1 bg-white border border-orange-200 rounded-md px-2 py-1 text-xs break-time-input"
+                                        data-break-type="@config.Type" data-time-type="end">
+                                    @for (int hour = 6; hour <= 23; hour++)
+                                    {
+                                        for (int minute = 0; minute < 60; minute += 15)
+                                        {
+                                            var timeValue = $"{hour:D2}:{minute:D2}";
+                                            <option value="@timeValue" selected="@(timeValue == endTime)">@timeValue</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Tips -->
+        <div class="mt-8">
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">💡 نکات مفید:</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• برای جلب اعتماد بیماران، ساعات کاری منظم تعریف کنید</li>
+                            <li>• حداقل ۵ دقیقه فاصله بین نوبت‌ها در نظر بگیرید</li>
+                            <li>• قیمت مشاوره را متناسب با تخصص و تجربه خود تعیین کنید</li>
+                            <li>• برای تماس‌های اورژانسی، گزینه "دسترسی فوری" را فعال نگه دارید</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Schedule page loaded - initializing...');
+    
+    // Initialize all components
+    initializeScheduleToggle();
+    initializeConsultationTypes();
+    initializeFeeManagement();
+    initializeTimeSettings();
+    initializeBreakTimes();
+    initializeSaveButtons();
+    initializeAvailabilityToggle();
+    
+    // Availability toggle functionality
+    function initializeAvailabilityToggle() {
+        const availabilityForm = document.querySelector('form[action*="UpdateAvailability"]');
+        const availabilityButton = availabilityForm?.querySelector('button[type="submit"]');
+        
+        if (availabilityButton) {
+            availabilityButton.addEventListener('click', function(e) {
+                // Add visual feedback
+                this.style.opacity = '0.6';
+                this.style.transform = 'scale(0.95)';
+                
+                // Show notification
+                const hiddenInput = availabilityForm.querySelector('input[name="isAvailable"]');
+                const newStatus = hiddenInput?.value === 'True' ? 'آنلاین' : 'آفلاین';
+                
+                console.log('Toggle clicked - Current value:', hiddenInput?.value, 'New status:', newStatus);
+                
+                showNotification(`در حال تغییر وضعیت به ${newStatus}...`, 'info');
+                
+                // Reset visual feedback after a short delay
+                setTimeout(() => {
+                    this.style.opacity = '';
+                    this.style.transform = '';
+                }, 150);
+            });
+        }
+        
+        // Debug: Log current state
+        const hiddenInput = availabilityForm?.querySelector('input[name="isAvailable"]');
+        console.log('Availability toggle initialized - Hidden input value:', hiddenInput?.value);
+    }
+    
+    // Schedule day toggle functionality
+    function initializeScheduleToggle() {
+        const dayToggles = document.querySelectorAll('.schedule-day-toggle');
+        console.log('Found day toggles:', dayToggles.length);
+        
+        dayToggles.forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const day = this.getAttribute('data-day');
+                console.log('Day toggle changed:', day, 'checked:', this.checked);
+                
+                // Find the parent container
+                const container = this.closest('[data-day]');
+                if (container) {
+                    // Find time selects in this container
+                    const timeSelects = container.querySelectorAll('.schedule-time-input');
+                    timeSelects.forEach(select => {
+                        select.disabled = !this.checked;
+                        if (this.checked) {
+                            select.style.opacity = '1';
+                        } else {
+                            select.style.opacity = '0.5';
+                        }
+                    });
+                }
+                
+                showNotification(`روز ${this.checked ? 'فعال' : 'غیرفعال'} شد`, 'info');
+            });
+            
+            // Trigger initial state
+            toggle.dispatchEvent(new Event('change'));
+        });
+    }
+    
+    // Consultation types functionality
+    function initializeConsultationTypes() {
+        const consultationTypes = document.querySelectorAll('.consultation-type');
+        console.log('Found consultation types:', consultationTypes.length);
+        
+        consultationTypes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const type = this.getAttribute('data-type');
+                console.log('Consultation type changed:', type, 'checked:', this.checked);
+                
+                updateConsultationTypeUI(this);
+                updateConsultationTypeCounter();
+                
+                showNotification(`${this.checked ? 'فعال' : 'غیرفعال'} شد`, 'info');
+            });
+        });
+    }
+    
+    function updateConsultationTypeUI(checkbox) {
+        const typeItem = checkbox.closest('.consultation-type-item');
+        const status = typeItem.querySelector('.consultation-type-status span');
+        const glow = typeItem.querySelector('.consultation-type-glow');
+        
+        if (checkbox.checked) {
+            typeItem.classList.remove('border-gray-200', 'bg-gray-50');
+            typeItem.classList.add('border-green-200', 'bg-green-50');
+            status.className = 'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800';
+            status.textContent = 'فعال';
+            
+            // Show glow effect
+            if (glow) {
+                glow.style.opacity = '0.3';
+                setTimeout(() => { glow.style.opacity = '0'; }, 200);
+            }
+        } else {
+            typeItem.classList.remove('border-green-200', 'bg-green-50');
+            typeItem.classList.add('border-gray-200', 'bg-gray-50');
+            status.className = 'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-500';
+            status.textContent = 'غیرفعال';
+        }
+    }
+    
+    function updateConsultationTypeCounter() {
+        const checkedTypes = document.querySelectorAll('.consultation-type:checked').length;
+        const statusElement = document.getElementById('consultationTypeStatus');
+        if (statusElement) {
+            statusElement.textContent = `${checkedTypes} از ۳ فعال`;
+        }
+    }
+    
+    // Fee management functionality
+    function initializeFeeManagement() {
+        const feeInput = document.getElementById('consultationFeeInput');
+        const quickFeeButtons = document.querySelectorAll('.quick-fee-btn');
+        console.log('Found fee input:', !!feeInput, 'Quick fee buttons:', quickFeeButtons.length);
+        
+        if (feeInput) {
+            feeInput.addEventListener('input', function() {
+                console.log('Fee changed to:', this.value);
+                updateFeeStatus();
+                updateCalculatedStatistics();
+                showFeeChangeIndicator();
+            });
+        }
+        
+        quickFeeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const fee = this.getAttribute('data-fee');
+                console.log('Quick fee button clicked:', fee);
+                
+                if (feeInput) {
+                    feeInput.value = fee;
+                    updateFeeStatus();
+                    updateCalculatedStatistics();
+                    
+                    // Visual feedback
+                    this.style.backgroundColor = '#dbeafe';
+                    this.style.borderColor = '#3b82f6';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '';
+                        this.style.borderColor = '';
+                    }, 200);
+                    
+                    showNotification(`هزینه مشاوره به ${parseInt(fee).toLocaleString()} تومان تغییر یافت`, 'success');
+                }
+            });
+        });
+    }
+    
+    function updateFeeStatus() {
+        const feeInput = document.getElementById('consultationFeeInput');
+        const feeStatus = document.getElementById('feeStatus');
+        
+        if (feeInput && feeStatus) {
+            const fee = parseInt(feeInput.value) || 0;
+            if (fee > 0) {
+                feeStatus.textContent = `${fee.toLocaleString()} تومان`;
+                feeStatus.className = 'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800';
+            } else {
+                feeStatus.textContent = 'تعیین نشده';
+                feeStatus.className = 'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-500';
+            }
+        }
+    }
+    
+    function showFeeChangeIndicator() {
+        const changeIndicator = document.querySelector('.fee-change-indicator');
+        if (changeIndicator) {
+            changeIndicator.style.opacity = '1';
+            changeIndicator.textContent = 'تغییر یافت';
+        }
+    }
+    
+    // Time settings functionality
+    function initializeTimeSettings() {
+        const durationSelect = document.getElementById('consultationDurationSelect');
+        const breakSelect = document.getElementById('breakBetweenSelect');
+        const maxConsultationsInput = document.getElementById('maxConsultationsInput');
+        
+        console.log('Time settings elements:', {
+            duration: !!durationSelect,
+            break: !!breakSelect,
+            maxConsultations: !!maxConsultationsInput
+        });
+        
+        if (durationSelect) {
+            durationSelect.addEventListener('change', function() {
+                console.log('Duration changed to:', this.value);
+                updateDurationDisplay();
+                updateTimeSettingsStatus();
+                updateCalculatedStatistics();
+            });
+        }
+        
+        if (breakSelect) {
+            breakSelect.addEventListener('change', function() {
+                console.log('Break time changed to:', this.value);
+                updateBreakDisplay();
+                updateTimeSettingsStatus();
+                updateCalculatedStatistics();
+            });
+        }
+        
+        if (maxConsultationsInput) {
+            maxConsultationsInput.addEventListener('input', function() {
+                console.log('Max consultations changed to:', this.value);
+                updateMaxConsultationsDisplay();
+                updateTimeSettingsStatus();
+                updateCalculatedStatistics();
+            });
+        }
+    }
+    
+    function updateDurationDisplay() {
+        const durationSelect = document.getElementById('consultationDurationSelect');
+        const durationDisplay = document.getElementById('durationDisplay');
+        
+        if (durationSelect && durationDisplay) {
+            durationDisplay.textContent = `${durationSelect.value} دقیقه`;
+        }
+    }
+    
+    function updateBreakDisplay() {
+        const breakSelect = document.getElementById('breakBetweenSelect');
+        const breakDisplay = document.getElementById('breakDisplay');
+        
+        if (breakSelect && breakDisplay) {
+            const value = parseInt(breakSelect.value);
+            breakDisplay.textContent = value === 0 ? 'بدون فاصله' : `${value} دقیقه`;
+        }
+    }
+    
+    function updateMaxConsultationsDisplay() {
+        const maxConsultationsInput = document.getElementById('maxConsultationsInput');
+        const maxConsultationsDisplay = document.getElementById('maxConsultationsDisplay');
+        
+        if (maxConsultationsInput && maxConsultationsDisplay) {
+            maxConsultationsDisplay.textContent = `${maxConsultationsInput.value} نوبت`;
+        }
+    }
+    
+    function updateTimeSettingsStatus() {
+        const durationSelect = document.getElementById('consultationDurationSelect');
+        const maxConsultationsInput = document.getElementById('maxConsultationsInput');
+        const statusElement = document.getElementById('timeSettingsStatus');
+        
+        if (durationSelect && maxConsultationsInput && statusElement) {
+            const duration = durationSelect.value || 30;
+            const maxConsultations = maxConsultationsInput.value || 20;
+            statusElement.textContent = `${duration} دقیقه | حداکثر ${maxConsultations} نوبت`;
+        }
+    }
+    
+    function updateCalculatedStatistics() {
+        const durationSelect = document.getElementById('consultationDurationSelect');
+        const breakSelect = document.getElementById('breakBetweenSelect');
+        const maxConsultationsInput = document.getElementById('maxConsultationsInput');
+        const feeInput = document.getElementById('consultationFeeInput');
+        
+        if (durationSelect && breakSelect && maxConsultationsInput && feeInput) {
+            const duration = parseInt(durationSelect.value) || 30;
+            const breakBetween = parseInt(breakSelect.value) || 5;
+            const maxConsultations = parseInt(maxConsultationsInput.value) || 20;
+            const fee = parseInt(feeInput.value) || 0;
+            
+            // Calculate working hours
+            const totalMinutes = maxConsultations * (duration + breakBetween);
+            const hours = totalMinutes / 60;
+            
+            // Calculate daily income
+            const dailyIncome = maxConsultations * fee;
+            
+            // Update displays
+            const maxWorkingHours = document.getElementById('maxWorkingHours');
+            const dailyIncomeElement = document.getElementById('dailyIncome');
+            
+            if (maxWorkingHours) {
+                maxWorkingHours.textContent = `${hours.toFixed(1)} ساعت`;
             }
             
-            @foreach (var day in weekDays)
-            {
-                <div class="flex items-center justify-between p-4 border rounded-lg">
-                    <div class="flex items-center space-x-3 space-x-reverse">
-                        <input type="checkbox" id="@day.English" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                        <label for="@day.English" class="text-sm font-medium text-gray-900">@day.Persian</label>
-                    </div>
-                    <div class="flex items-center space-x-2 space-x-reverse">
-                        <select class="border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
-                            <option value="08:00">08:00</option>
-                            <option value="09:00">09:00</option>
-                            <option value="10:00">10:00</option>
-                            <option value="11:00">11:00</option>
-                            <option value="12:00">12:00</option>
-                            <option value="13:00">13:00</option>
-                            <option value="14:00">14:00</option>
-                            <option value="15:00">15:00</option>
-                            <option value="16:00">16:00</option>
-                        </select>
-                        <span class="text-gray-500">تا</span>
-                        <select class="border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
-                            <option value="12:00">12:00</option>
-                            <option value="13:00">13:00</option>
-                            <option value="14:00">14:00</option>
-                            <option value="15:00">15:00</option>
-                            <option value="16:00">16:00</option>
-                            <option value="17:00">17:00</option>
-                            <option value="18:00">18:00</option>
-                            <option value="19:00">19:00</option>
-                            <option value="20:00">20:00</option>
-                            <option value="21:00">21:00</option>
-                            <option value="22:00">22:00</option>
-                        </select>
-                    </div>
-                </div>
+            if (dailyIncomeElement) {
+                dailyIncomeElement.textContent = `${dailyIncome.toLocaleString()} تومان`;
             }
-        </div>
-        <div class="mt-6 flex justify-end">
-            <button type="button" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                ذخیره برنامه
-            </button>
-        </div>
-    </div>
+        }
+    }
+    
+    // Break times functionality
+    function initializeBreakTimes() {
+        const breakToggles = document.querySelectorAll('.break-toggle');
+        console.log('Found break toggles:', breakToggles.length);
+        
+        breakToggles.forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const breakType = this.getAttribute('data-break-type');
+                console.log('Break toggle changed:', breakType, 'checked:', this.checked);
+                
+                const container = this.closest('[data-break-type]');
+                if (container) {
+                    const timeInputs = container.querySelectorAll('.break-time-input');
+                    timeInputs.forEach(input => {
+                        input.disabled = !this.checked;
+                        input.style.opacity = this.checked ? '1' : '0.5';
+                    });
+                }
+                
+                showNotification(`${this.checked ? 'فعال' : 'غیرفعال'} شد`, 'info');
+            });
+            
+            // Trigger initial state
+            toggle.dispatchEvent(new Event('change'));
+        });
+    }
+    
+    // Save buttons functionality
+    function initializeSaveButtons() {
+        const saveScheduleButton = document.getElementById('saveScheduleButton');
+        const saveAllButton = document.getElementById('saveAllButton');
+        
+        console.log('Save buttons:', {
+            schedule: !!saveScheduleButton,
+            all: !!saveAllButton
+        });
+        
+        if (saveScheduleButton) {
+            saveScheduleButton.addEventListener('click', function() {
+                console.log('Save schedule button clicked');
+                saveScheduleOnly();
+            });
+        }
+        
+        if (saveAllButton) {
+            saveAllButton.addEventListener('click', function() {
+                console.log('Save all button clicked');
+                saveAllSettings();
+            });
+        }
+    }
+    
+    async function saveScheduleOnly() {
+        showNotification('در حال ذخیره برنامه هفتگی...', 'info');
+        
+        try {
+            const scheduleData = collectScheduleData();
+            await saveData(scheduleData);
+            showNotification('برنامه هفتگی با موفقیت ذخیره شد', 'success');
+        } catch (error) {
+            console.error('Error saving schedule:', error);
+            showNotification('خطا در ذخیره برنامه هفتگی', 'error');
+        }
+    }
+    
+    async function saveAllSettings() {
+        const saveButton = document.getElementById('saveAllButton');
+        const saveButtonText = document.getElementById('saveButtonText');
+        const saveProgress = document.querySelector('.save-progress');
+        
+        // Show loading state
+        if (saveButtonText) saveButtonText.textContent = 'در حال ذخیره...';
+        if (saveButton) saveButton.disabled = true;
+        if (saveProgress) saveProgress.classList.remove('hidden');
+        
+        showNotification('در حال ذخیره تمام تنظیمات...', 'info');
+        
+        try {
+            const allData = collectAllData();
+            console.log('Saving all data:', allData);
+            
+            await saveData(allData);
+            
+            showNotification('تمام تنظیمات با موفقیت ذخیره شد', 'success');
+            updateOriginalValues();
+            
+        } catch (error) {
+            console.error('Error saving all settings:', error);
+            showNotification('خطا در ذخیره تنظیمات', 'error');
+        } finally {
+            // Reset loading state
+            if (saveButtonText) saveButtonText.textContent = 'ذخیره تمام تنظیمات';
+            if (saveButton) saveButton.disabled = false;
+            if (saveProgress) saveProgress.classList.add('hidden');
+        }
+    }
+    
+    function collectScheduleData() {
+        const schedules = [];
+        
+        for (let day = 0; day <= 6; day++) {
+            const dayToggle = document.querySelector(`input[data-day="${day}"]`);
+            const startSelect = document.querySelector(`select[data-day="${day}"][data-type="start"]`);
+            const endSelect = document.querySelector(`select[data-day="${day}"][data-type="end"]`);
+            
+            if (dayToggle && startSelect && endSelect) {
+                schedules.push({
+                    DayOfWeek: day,
+                    IsActive: dayToggle.checked,
+                    StartTime: formatTimeForServer(startSelect.value),
+                    EndTime: formatTimeForServer(endSelect.value)
+                });
+            }
+        }
+        
+        return { Schedules: schedules };
+    }
+    
+    function collectAllData() {
+        const data = collectScheduleData();
+        
+        // Add break times
+        data.BreakTimes = [];
+        const breakTypes = ['Lunch', 'Prayer', 'Custom'];
+        breakTypes.forEach(type => {
+            const toggle = document.querySelector(`input[data-break-type="${type}"]`);
+            const startSelect = document.querySelector(`select[data-break-type="${type}"][data-time-type="start"]`);
+            const endSelect = document.querySelector(`select[data-break-type="${type}"][data-time-type="end"]`);
+            
+            if (toggle && startSelect && endSelect) {
+                data.BreakTimes.push({
+                    BreakType: type,
+                    Title: type === 'Lunch' ? 'ناهار' : type === 'Prayer' ? 'نماز' : 'استراحت',
+                    IsActive: toggle.checked,
+                    StartTime: formatTimeForServer(startSelect.value),
+                    EndTime: formatTimeForServer(endSelect.value)
+                });
+            }
+        });
+        
+        // Add time settings
+        const durationSelect = document.getElementById('consultationDurationSelect');
+        const breakSelect = document.getElementById('breakBetweenSelect');
+        const maxConsultationsInput = document.getElementById('maxConsultationsInput');
+        
+        data.TimeSettings = {
+            ConsultationDurationMinutes: parseInt(durationSelect?.value || '30'),
+            BreakBetweenConsultationsMinutes: parseInt(breakSelect?.value || '5'),
+            MaxDailyConsultations: parseInt(maxConsultationsInput?.value || '20')
+        };
+        
+        // Add consultation types
+        data.OffersVoiceCall = document.querySelector('input[data-type="OffersVoiceCall"]')?.checked || false;
+        data.OffersVideoCall = document.querySelector('input[data-type="OffersVideoCall"]')?.checked || false;
+        data.OffersInPersonConsultation = document.querySelector('input[data-type="OffersInPersonConsultation"]')?.checked || false;
+        
+        // Add consultation fee
+        const feeInput = document.getElementById('consultationFeeInput');
+        data.ConsultationFee = parseFloat(feeInput?.value || '0');
+        
+        return data;
+    }
+    
+    function formatTimeForServer(timeString) {
+        if (!timeString) return '00:00:00';
+        return timeString.length === 5 ? timeString + ':00' : timeString;
+    }
+    
+    async function saveData(data) {
+        const response = await fetch('/Doctor/Profile/UpdateSchedule', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`خطای سرور ${response.status}: ${response.statusText}`);
+        }
+        
+        const result = await response.json();
+        
+        if (!result.success) {
+            throw new Error(result.message || 'خطا در ذخیره تنظیمات');
+        }
+        
+        return result;
+    }
+    
+    function updateOriginalValues() {
+        const feeInput = document.getElementById('consultationFeeInput');
+        const maxConsultationsInput = document.getElementById('maxConsultationsInput');
+        
+        if (feeInput) {
+            feeInput.setAttribute('data-original-value', feeInput.value);
+        }
+        
+        if (maxConsultationsInput) {
+            maxConsultationsInput.setAttribute('data-original-value', maxConsultationsInput.value);
+        }
+        
+        // Hide change indicators
+        const changeIndicators = document.querySelectorAll('.fee-change-indicator');
+        changeIndicators.forEach(indicator => {
+            indicator.style.opacity = '0';
+        });
+    }
+    
+    function showNotification(message, type = 'info') {
+        console.log('Notification:', type, message);
+        
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 left-4 px-4 py-2 rounded-lg text-white text-sm transition-all duration-300 z-50 ${
+            type === 'success' ? 'bg-green-500' : 
+            type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+        }`;
+        notification.textContent = message;
+        notification.style.transform = 'translateY(-20px)';
+        notification.style.opacity = '0';
+        
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.style.transform = 'translateY(0)';
+            notification.style.opacity = '1';
+        }, 10);
+        
+        // Animate out and remove
+        setTimeout(() => {
+            notification.style.transform = 'translateY(-20px)';
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+    
+    // Initialize calculated statistics on page load
+    updateCalculatedStatistics();
+    
+    console.log('Schedule page initialization completed');
+});
+</script>
 
-    <!-- Consultation Types -->
-    <div class="bg-white shadow rounded-lg p-6 mb-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-6">نوع مشاوره‌های ارائه شده</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="space-y-4">
-                <label class="flex items-center">
-                    <input type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" @(Model.OffersVoiceCall ? "checked" : "")>
-                    <span class="mr-3 text-sm text-gray-900">تماس صوتی</span>
-                </label>
-                <label class="flex items-center">
-                    <input type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" @(Model.OffersVideoCall ? "checked" : "")>
-                    <span class="mr-3 text-sm text-gray-900">تماس تصویری</span>
-                </label>
-                <label class="flex items-center">
-                    <input type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" @(Model.OffersInPersonConsultation ? "checked" : "")>
-                    <span class="mr-3 text-sm text-gray-900">حضوری</span>
-                </label>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">هزینه مشاوره (تومان)</label>
-                <input type="number" value="@Model.ConsultationFee" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" min="0" step="1000">
-            </div>
-        </div>
-        <div class="mt-6 flex justify-end">
-            <button type="button" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                ذخیره تنظیمات
-            </button>
-        </div>
-    </div>
+<style>
+/* Custom animations */
+@@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-    <!-- Break Times -->
-    <div class="bg-white shadow rounded-lg p-6 mb-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-6">زمان‌های استراحت</h3>
-        <div class="space-y-4">
-            <div class="flex items-center justify-between p-4 border rounded-lg">
-                <div>
-                    <label class="text-sm font-medium text-gray-900">استراحت نهار</label>
-                    <p class="text-sm text-gray-500">تعطیلی در ساعات ناهار</p>
-                </div>
-                <div class="flex items-center space-x-2 space-x-reverse">
-                    <select class="border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
-                        <option value="12:00">12:00</option>
-                        <option value="12:30">12:30</option>
-                        <option value="13:00">13:00</option>
-                        <option value="13:30">13:30</option>
-                    </select>
-                    <span class="text-gray-500">تا</span>
-                    <select class="border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
-                        <option value="13:00">13:00</option>
-                        <option value="13:30">13:30</option>
-                        <option value="14:00">14:00</option>
-                        <option value="14:30">14:30</option>
-                        <option value="15:00">15:00</option>
-                    </select>
-                    <input type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                </div>
-            </div>
-        </div>
-        <div class="mt-6 flex justify-end">
-            <button type="button" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                ذخیره زمان‌ها
-            </button>
-        </div>
-    </div>
+.fade-in {
+    animation: slideIn 0.3s ease-out;
+}
 
-    <!-- Time Slot Settings -->
-    <div class="bg-white shadow rounded-lg p-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-6">تنظیمات بازه زمانی</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-                <label class="block text-sm font-medium text-gray-700">مدت زمان هر مشاوره (دقیقه)</label>
-                <select class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                    <option value="15">15 دقیقه</option>
-                    <option value="30" selected>30 دقیقه</option>
-                    <option value="45">45 دقیقه</option>
-                    <option value="60">60 دقیقه</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">فاصله بین مشاوره‌ها (دقیقه)</label>
-                <select class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                    <option value="0">بدون فاصله</option>
-                    <option value="5" selected>5 دقیقه</option>
-                    <option value="10">10 دقیقه</option>
-                    <option value="15">15 دقیقه</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">حداکثر تعداد مشاوره در روز</label>
-                <input type="number" value="20" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" min="1" max="50">
-            </div>
-        </div>
-        <div class="mt-6 flex justify-end">
-            <button type="button" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                ذخیره تنظیمات
-            </button>
-        </div>
-    </div>
-</div> 
+/* Smooth transitions for all interactive elements */
+* {
+    transition: all 0.2s ease;
+}
+
+/* Custom scrollbar for modern look */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #3b82f6, #6366f1);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #1d4ed8, #4f46e5);
+}
+
+/* Button hover effects */
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Toggle animations */
+input[type="checkbox"]:checked + div {
+    transform: scale(1.05);
+}
+
+/* Loading spinner animation */
+@@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+</style> 

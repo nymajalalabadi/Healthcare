@@ -70,7 +70,7 @@
                         </a>
                         
                         <form asp-action="UpdateAvailability" method="post" class="inline-form">
-                            <input type="hidden" name="isAvailable" value="@(!Model.IsAvailable)">
+                            <input type="hidden" name="isAvailable" value="@((!Model.IsAvailable).ToString())">
                             <button type="submit" class="btn @(Model.IsAvailable ? "btn-warning" : "btn-success")">
                                 <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     @if (Model.IsAvailable)

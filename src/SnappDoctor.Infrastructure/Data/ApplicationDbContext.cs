@@ -13,6 +13,9 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Doctor> Doctors { get; set; }
     public DbSet<Consultation> Consultations { get; set; }
     public DbSet<OtpCode> OtpCodes { get; set; }
+    public DbSet<DoctorSchedule> DoctorSchedules { get; set; }
+    public DbSet<DoctorBreakTime> DoctorBreakTimes { get; set; }
+    public DbSet<DoctorTimeSettings> DoctorTimeSettings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -82,6 +85,49 @@ public class ApplicationDbContext : IdentityDbContext<User>
             entity.HasOne(e => e.User)
                 .WithMany(u => u.OtpCodes)
                 .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // DoctorSchedule entity configuration
+        builder.Entity<DoctorSchedule>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.DayOfWeek).IsRequired();
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+
+            entity.HasOne(e => e.Doctor)
+                .WithMany(d => d.Schedules)
+                .HasForeignKey(e => e.DoctorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(e => new { e.DoctorId, e.DayOfWeek }).IsUnique();
+        });
+
+        // DoctorBreakTime entity configuration
+        builder.Entity<DoctorBreakTime>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.BreakType).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.Title).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+
+            entity.HasOne(e => e.Doctor)
+                .WithMany(d => d.BreakTimes)
+                .HasForeignKey(e => e.DoctorId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // DoctorTimeSettings entity configuration
+        builder.Entity<DoctorTimeSettings>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.ConsultationDurationMinutes).HasDefaultValue(30);
+            entity.Property(e => e.BreakBetweenConsultationsMinutes).HasDefaultValue(5);
+            entity.Property(e => e.MaxDailyConsultations).HasDefaultValue(20);
+
+            entity.HasOne(e => e.Doctor)
+                .WithOne(d => d.TimeSettings)
+                .HasForeignKey<DoctorTimeSettings>(e => e.DoctorId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 

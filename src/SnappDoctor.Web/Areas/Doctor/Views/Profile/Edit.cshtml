@@ -237,7 +237,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-4">وضعیت دسترسی</label>
                 <div class="availability-toggle-container">
                     <div class="availability-card available-card" data-value="true">
-                        <input type="radio" asp-for="IsAvailable" value="true" id="available-yes" class="availability-radio">
+                        <input type="radio" asp-for="IsAvailable" value="True" id="available-yes" class="availability-radio" checked="@(Model.IsAvailable == true)">
                         <label for="available-yes" class="availability-label">
                             <div class="availability-icon">
                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,7 +252,7 @@
                     </div>
                     
                     <div class="availability-card unavailable-card" data-value="false">
-                        <input type="radio" asp-for="IsAvailable" value="false" id="available-no" class="availability-radio">
+                        <input type="radio" asp-for="IsAvailable" value="False" id="available-no" class="availability-radio" checked="@(Model.IsAvailable == false)">
                         <label for="available-no" class="availability-label">
                             <div class="availability-icon">
                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -313,7 +313,7 @@
                     <div class="relative">
                         <input asp-for="ConsultationFee" type="number" min="0" step="1000" 
                                class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500 pl-12 pr-4 py-3 text-lg font-semibold" 
-                               placeholder="مثال: 50000" required>
+                               placeholder="مثال: 50000">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <span class="text-gray-500 sm:text-sm">تومان</span>
                         </div>
@@ -722,16 +722,19 @@
             border-color: #ef4444;
         }
         
-        .availability-radio:checked + .availability-label {
+        .availability-radio:checked + .availability-label,
+        .availability-card.selected .availability-label {
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
         
-        .available-card .availability-radio:checked + .availability-label {
+        .available-card .availability-radio:checked + .availability-label,
+        .available-card.selected .availability-label {
             border-color: #10b981;
             background: linear-gradient(145deg, #f0fdf4, #dcfce7);
         }
         
-        .unavailable-card .availability-radio:checked + .availability-label {
+        .unavailable-card .availability-radio:checked + .availability-label,
+        .unavailable-card.selected .availability-label {
             border-color: #ef4444;
             background: linear-gradient(145deg, #fef2f2, #fee2e2);
         }
@@ -757,7 +760,8 @@
             color: white;
         }
         
-        .availability-radio:checked + .availability-label .availability-icon {
+        .availability-radio:checked + .availability-label .availability-icon,
+        .availability-card.selected .availability-label .availability-icon {
             transform: scale(1.1);
             animation: pulse 2s infinite;
         }
@@ -1187,9 +1191,42 @@
             });
             
             // ===== Availability Toggle =====
+            
+            // Initialize availability state on page load
+            function initializeAvailabilityState() {
+                $('.availability-radio').each(function() {
+                    const radio = $(this);
+                    const card = radio.closest('.availability-card');
+                    const label = radio.next('.availability-label');
+                    
+                    if (radio.is(':checked')) {
+                        card.addClass('selected');
+                        label.addClass('selected');
+                        console.log('Radio button checked:', radio.attr('id'), 'Value:', radio.val());
+                    } else {
+                        card.removeClass('selected');
+                        label.removeClass('selected');
+                    }
+                });
+            }
+            
+            // Initialize on page load
+            initializeAvailabilityState();
+            
             $('.availability-card').on('click', function() {
                 const radio = $(this).find('.availability-radio');
+                
+                // Uncheck all other radio buttons first
+                $('.availability-radio').prop('checked', false);
+                $('.availability-card').removeClass('selected');
+                $('.availability-label').removeClass('selected');
+                
+                // Check the clicked radio button
                 radio.prop('checked', true);
+                $(this).addClass('selected');
+                $(this).find('.availability-label').addClass('selected');
+                
+                console.log('Availability changed to:', radio.val());
                 
                 // Animation effect
                 $(this).find('.availability-label').addClass('selected-bounce');
@@ -1218,6 +1255,22 @@
             
             bioTextarea.on('input', updateCharacterCount);
             updateCharacterCount(); // Initial count
+            
+            // ===== Form Submission Debug =====
+            $('form').on('submit', function(e) {
+                const checkedRadio = $('input[name="IsAvailable"]:checked');
+                console.log('Form submitting with IsAvailable:', checkedRadio.val());
+                
+                if (checkedRadio.length === 0) {
+                    console.error('No radio button selected for IsAvailable!');
+                    e.preventDefault();
+                    alert('لطفاً وضعیت دسترسی خود را انتخاب کنید');
+                    return false;
+                }
+                
+                // Visual feedback
+                $('.submit-button').prop('disabled', true).text('در حال ذخیره...');
+            });
             
             // ===== Form Focus Effects =====
             $('.form-input').on('focus', function() {

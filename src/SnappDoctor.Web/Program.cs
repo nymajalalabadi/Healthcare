@@ -53,6 +53,7 @@ builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
 // Add services
 builder.Services.AddScoped<ISmsService, KavenegarSmsService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
 
 // Add MVC
 builder.Services.AddControllersWithViews();
