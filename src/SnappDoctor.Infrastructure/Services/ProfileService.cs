@@ -118,7 +118,7 @@ public class ProfileService : IProfileService
         
         var viewModel = new DoctorAnalyticsViewModel
         {
-            TotalRevenue = consultations.Where(c => c.Status == ConsultationStatus.Completed).Sum(c => c.Fee),
+            TotalRevenue = consultations.Where(c => c.Status == ConsultationStatus.Completed).Sum(c => c.Fee ?? 0m),
             TotalConsultations = consultations.Count(),
             TotalPatients = consultations.Select(c => c.UserId).Distinct().Count(),
             // Assuming average daily consultations calculation might need a date range, for now just a placeholder
@@ -152,7 +152,7 @@ public class ProfileService : IProfileService
             {
                 activity.Type = "ConsultationCompleted";
                 activity.Description += "تکمیل شد";
-                activity.Value = $"+{consultation.Fee.ToString("N0")} تومان";
+                activity.Value = $"+{(consultation.Fee ?? 0).ToString("N0")} تومان";
             }
             else if (consultation.Status == ConsultationStatus.Pending)
             {

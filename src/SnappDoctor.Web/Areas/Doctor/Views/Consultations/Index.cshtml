@@ -79,7 +79,7 @@
                                         </div>
                                         <div class="bg-gray-50 rounded-lg p-3">
                                             <span class="text-gray-500 text-xs block mb-1">هزینه:</span>
-                                            <p class="font-medium text-gray-900">@consultation.Fee.ToString("N0") تومان</p>
+                                            <p class="font-medium text-gray-900">@(consultation.Fee?.ToString("N0") ?? "0") تومان</p>
                                         </div>
                                     </div>
                                     

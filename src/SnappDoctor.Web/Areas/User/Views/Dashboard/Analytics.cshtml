@@ -3,37 +3,41 @@
     ViewData["Title"] = "آمار و تحلیل‌ها";
 }
 
-<div class="min-h-screen bg-gray-50 py-8">
-    <div class="max-w-7xl mx-auto px-4">
-        <!-- Header -->
-        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <a href="@Url.Action("Index")" class="text-gray-500 hover:text-gray-700 ml-3">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header with gradient background -->
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl shadow-2xl p-8 mb-8 text-white">
+            <div class="flex flex-col lg:flex-row items-center justify-between">
+                <div class="flex items-center mb-4 lg:mb-0">
+                    <a href="@Url.Action("Index")" class="text-blue-100 hover:text-white transition-colors duration-200 ml-4">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                         </svg>
                     </a>
-                    <h1 class="text-2xl font-bold text-gray-800">آمار و تحلیل‌ها</h1>
+                    <div>
+                        <h1 class="text-3xl lg:text-4xl font-bold">آمار و تحلیل‌ها</h1>
+                        <p class="text-blue-100 mt-2">نگاهی جامع به فعالیت‌های شما</p>
+                    </div>
                 </div>
                 <div class="flex items-center space-x-3 space-x-reverse">
-                    <select id="timeRange" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="7">7 روز گذشته</option>
-                        <option value="30" selected>30 روز گذشته</option>
-                        <option value="90">90 روز گذشته</option>
-                        <option value="365">1 سال گذشته</option>
+                    <select id="timeRange" class="px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl focus:ring-2 focus:ring-white/50 focus:border-transparent text-white placeholder-white/70 transition-all duration-200">
+                        <option value="7" class="text-gray-800">7 روز گذشته</option>
+                        <option value="30" selected class="text-gray-800">30 روز گذشته</option>
+                        <option value="90" class="text-gray-800">90 روز گذشته</option>
+                        <option value="365" class="text-gray-800">1 سال گذشته</option>
                     </select>
                 </div>
             </div>
         </div>
 
-        <!-- Key Metrics -->
+        <!-- Key Metrics with enhanced design -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white rounded-xl shadow-lg p-6">
+            <!-- Total Consultations -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 transform hover:scale-105 transition-all duration-300 border-l-4 border-blue-500">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-14 h-14 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
+                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
                         </div>
@@ -41,18 +45,19 @@
                     <div class="mr-4 w-0 flex-1">
                         <dl>
                             <dt class="text-sm font-medium text-gray-500 truncate">کل مشاوره‌ها</dt>
-                            <dd class="text-2xl font-bold text-gray-900">@ViewBag.TotalConsultations</dd>
-                            <dd class="text-sm text-green-600">+12% نسبت به ماه گذشته</dd>
+                            <dd class="text-3xl font-bold text-gray-900">@ViewBag.TotalConsultations</dd>
+                            <dd class="text-sm text-green-600 font-medium">+@ViewBag.ConsultationGrowth% نسبت به ماه گذشته</dd>
                         </dl>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-lg p-6">
+            <!-- Completed Consultations -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 transform hover:scale-105 transition-all duration-300 border-l-4 border-green-500">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-14 h-14 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg">
+                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </div>
@@ -60,18 +65,19 @@
                     <div class="mr-4 w-0 flex-1">
                         <dl>
                             <dt class="text-sm font-medium text-gray-500 truncate">مشاوره‌های تکمیل شده</dt>
-                            <dd class="text-2xl font-bold text-gray-900">@ViewBag.CompletedConsultations</dd>
-                            <dd class="text-sm text-green-600">+8% نسبت به ماه گذشته</dd>
+                            <dd class="text-3xl font-bold text-gray-900">@ViewBag.CompletedConsultations</dd>
+                            <dd class="text-sm text-green-600 font-medium">@ViewBag.CompletedConsultations از @ViewBag.TotalConsultations مشاوره</dd>
                         </dl>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-lg p-6">
+            <!-- Pending Consultations -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 transform hover:scale-105 transition-all duration-300 border-l-4 border-yellow-500">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <div class="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-14 h-14 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-2xl flex items-center justify-center shadow-lg">
+                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
@@ -79,18 +85,19 @@
                     <div class="mr-4 w-0 flex-1">
                         <dl>
                             <dt class="text-sm font-medium text-gray-500 truncate">مشاوره‌های در انتظار</dt>
-                            <dd class="text-2xl font-bold text-gray-900">@ViewBag.PendingConsultations</dd>
-                            <dd class="text-sm text-yellow-600">+5% نسبت به ماه گذشته</dd>
+                            <dd class="text-3xl font-bold text-gray-900">@ViewBag.PendingConsultations</dd>
+                            <dd class="text-sm text-yellow-600 font-medium">در انتظار تأیید یا تکمیل</dd>
                         </dl>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-lg p-6">
+            <!-- Total Spent -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 transform hover:scale-105 transition-all duration-300 border-l-4 border-purple-500">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-14 h-14 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                             </svg>
                         </div>
@@ -98,89 +105,62 @@
                     <div class="mr-4 w-0 flex-1">
                         <dl>
                             <dt class="text-sm font-medium text-gray-500 truncate">کل هزینه‌ها</dt>
-                            <dd class="text-2xl font-bold text-gray-900">@ViewBag.TotalSpent?.ToString("N0") تومان</dd>
-                            <dd class="text-sm text-green-600">+15% نسبت به ماه گذشته</dd>
+                            <dd class="text-3xl font-bold text-gray-900">@ViewBag.TotalSpent.ToString("N0") تومان</dd>
+                            <dd class="text-sm text-green-600 font-medium">+@ViewBag.SpendingGrowth% نسبت به ماه گذشته</dd>
                         </dl>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <!-- Consultation Trend Chart -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">روند مشاوره‌ها</h3>
-                <div class="h-64 flex items-center justify-center">
+            <div class="bg-white rounded-2xl shadow-xl p-8 transform hover:shadow-2xl transition-all duration-300">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">روند مشاوره‌ها (7 روز گذشته)</h3>
+                    <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                </div>
+                <div class="h-80 flex items-center justify-center">
                     <canvas id="consultationChart" width="400" height="200"></canvas>
                 </div>
             </div>
 
             <!-- Consultation Types Distribution -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">توزیع انواع مشاوره</h3>
-                <div class="h-64 flex items-center justify-center">
+            <div class="bg-white rounded-2xl shadow-xl p-8 transform hover:shadow-2xl transition-all duration-300">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">توزیع انواع مشاوره</h3>
+                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                </div>
+                <div class="h-80 flex items-center justify-center">
                     <canvas id="consultationTypesChart" width="400" height="200"></canvas>
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Monthly Spending and Top Doctors -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <!-- Monthly Spending -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">هزینه‌های ماهانه</h3>
-                <div class="space-y-4">
-                    @{
-                        var months = new[] { "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند" };
-                        var currentMonth = DateTime.Now.Month - 1;
-                    }
-                    
-                    @for (int i = 0; i < 6; i++)
-                    {
-                        var monthIndex = (currentMonth - i + 12) % 12;
-                        var spending = new Random().Next(50000, 500000);
-                        var percentage = new Random().Next(60, 100);
-                        
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">@months[monthIndex]</span>
-                            <div class="flex items-center space-x-3 space-x-reverse">
-                                <div class="w-24 bg-gray-200 rounded-full h-2">
-                                    <div class="bg-blue-600 h-2 rounded-full" style="width: @percentage%"></div>
-                                </div>
-                                <span class="text-sm font-medium text-gray-900">@spending.ToString("N0") تومان</span>
-                            </div>
-                        </div>
-                    }
+            <div class="bg-white rounded-2xl shadow-xl p-8 transform hover:shadow-2xl transition-all duration-300">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">هزینه‌های ماهانه</h3>
+                    <div class="w-3 h-3 bg-purple-500 rounded-full"></div>
                 </div>
-            </div>
-
-            <!-- Doctor Ratings -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">بهترین پزشکان</h3>
-                <div class="space-y-4">
-                    @if (ViewBag.TopDoctors != null)
+                <div class="space-y-6">
+                    @if (ViewBag.MonthlySpending != null)
                     {
-                        @foreach (var doctor in ViewBag.TopDoctors.Take(5))
+                        @foreach (var monthData in ViewBag.MonthlySpending)
                         {
-                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                <div class="flex items-center">
-                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center ml-3">
-                                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                        </svg>
+                            var spending = monthData.Spending;
+                            var percentage = ViewBag.TotalSpent > 0 ? (int)((double)(spending / (double)ViewBag.TotalSpent) * 100) : 0;
+                            
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
+                                <span class="text-sm font-medium text-gray-700">@monthData.Month</span>
+                                <div class="flex items-center space-x-4 space-x-reverse">
+                                    <div class="w-32 bg-gray-200 rounded-full h-3">
+                                        <div class="bg-gradient-to-r from-purple-500 to-purple-600 h-3 rounded-full transition-all duration-500" style="width: @percentage%"></div>
                                     </div>
-                                    <div>
-                                        <p class="font-medium text-gray-900">دکتر @doctor.FullName</p>
-                                        <p class="text-sm text-gray-600">@doctor.Specialization</p>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <div class="flex items-center">
-                                        <span class="text-lg font-bold text-blue-600">@doctor.Rating</span>
-                                        <svg class="w-5 h-5 text-yellow-400 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                        </svg>
-                                    </div>
-                                    <p class="text-xs text-gray-500">@doctor.ReviewCount نظر</p>
+                                    <span class="text-sm font-bold text-gray-900 min-w-[80px] text-left">@spending.ToString("N0") تومان</span>
                                 </div>
                             </div>
                         }
@@ -188,10 +168,57 @@
                     else
                     {
                         <div class="text-center py-8 text-gray-500">
-                            <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                            </svg>
-                            <p>اطلاعات پزشکان در دسترس نیست</p>
+                            <p>اطلاعات هزینه‌های ماهانه در دسترس نیست</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Top Doctors -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 transform hover:shadow-2xl transition-all duration-300">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">بهترین پزشکان</h3>
+                    <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                </div>
+                <div class="space-y-4">
+                    @if (ViewBag.TopDoctors != null && ViewBag.TopDoctors.Count > 0)
+                    {
+                        @foreach (var doctor in ViewBag.TopDoctors)
+                        {
+                            <div class="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl hover:from-blue-100 hover:to-indigo-100 transition-all duration-200 border border-blue-100">
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center ml-4 shadow-lg">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-gray-900">دکتر @doctor.FullName</p>
+                                        <p class="text-sm text-gray-600">@doctor.Specialization</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="flex items-center mb-1">
+                                        <span class="text-xl font-bold text-blue-600">@doctor.Rating</span>
+                                        <svg class="w-6 h-6 text-yellow-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-xs text-gray-500">@doctor.ReviewCount مشاوره</p>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center py-12 text-gray-500">
+                            <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <p class="text-lg font-medium">هنوز مشاوره‌ای نداشته‌اید</p>
+                            <p class="text-sm text-gray-400 mt-2">پس از مشاوره، پزشکان برتر نمایش داده می‌شوند</p>
                         </div>
                     }
                 </div>
@@ -199,33 +226,39 @@
         </div>
 
         <!-- Recent Activity -->
-        <div class="bg-white rounded-xl shadow-lg p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">فعالیت‌های اخیر</h3>
+        <div class="bg-white rounded-2xl shadow-xl p-8 transform hover:shadow-2xl transition-all duration-300">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-gray-800">فعالیت‌های اخیر</h3>
+                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+            </div>
             <div class="space-y-4">
-                @if (ViewBag.RecentActivity != null)
+                @if (ViewBag.RecentActivity != null && ViewBag.RecentActivity.Count > 0)
                 {
                     @foreach (var activity in ViewBag.RecentActivity)
                     {
-                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
-                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center ml-3">
-                                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="flex items-center p-4 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 rounded-xl transition-all duration-200 border border-transparent hover:border-red-100">
+                            <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-pink-600 rounded-full flex items-center justify-center ml-4 shadow-lg">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             </div>
                             <div class="flex-1">
-                                <p class="text-sm text-gray-900">@activity.Description</p>
-                                <p class="text-xs text-gray-500">@activity.Timestamp.ToString("yyyy/MM/dd HH:mm")</p>
+                                <p class="text-sm font-medium text-gray-900">@activity.Description</p>
+                                <p class="text-xs text-gray-500 mt-1">@activity.Timestamp.ToString("yyyy/MM/dd HH:mm")</p>
                             </div>
                         </div>
                     }
                 }
                 else
                 {
-                    <div class="text-center py-8 text-gray-500">
-                        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <p>فعالیت‌ای برای نمایش وجود ندارد</p>
+                    <div class="text-center py-12 text-gray-500">
+                        <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-lg font-medium">هنوز فعالیتی نداشته‌اید</p>
+                        <p class="text-sm text-gray-400 mt-2">پس از رزرو نوبت، فعالیت‌ها نمایش داده می‌شوند</p>
                     </div>
                 }
             </div>
@@ -235,19 +268,30 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Consultation Trend Chart
+    // Dynamic data from ViewBag
+    const weeklyData = @Html.Raw(Json.Serialize(ViewBag.WeeklyData ?? new List<int>()));
+    const weekLabels = @Html.Raw(Json.Serialize(ViewBag.WeekLabels ?? new List<string>()));
+    const consultationTypes = @Html.Raw(Json.Serialize(ViewBag.ConsultationTypes ?? new List<object>()));
+    
+    // Enhanced Consultation Trend Chart with real data
     const consultationCtx = document.getElementById('consultationChart').getContext('2d');
     const consultationChart = new Chart(consultationCtx, {
         type: 'line',
         data: {
-            labels: ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'],
+            labels: weekLabels.length > 0 ? weekLabels : ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'],
             datasets: [{
                 label: 'تعداد مشاوره‌ها',
-                data: [12, 19, 15, 25, 22, 30, 28],
+                data: weeklyData.length > 0 ? weeklyData : [0, 0, 0, 0, 0, 0, 0],
                 borderColor: 'rgb(59, 130, 246)',
                 backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderWidth: 3,
                 tension: 0.4,
-                fill: true
+                fill: true,
+                pointBackgroundColor: 'rgb(59, 130, 246)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 6,
+                pointHoverRadius: 8
             }]
         },
         options: {
@@ -262,32 +306,52 @@
                 y: {
                     beginAtZero: true,
                     grid: {
-                        color: 'rgba(0, 0, 0, 0.1)'
+                        color: 'rgba(0, 0, 0, 0.1)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: {
+                            size: 12
+                        }
                     }
                 },
                 x: {
                     grid: {
-                        color: 'rgba(0, 0, 0, 0.1)'
+                        color: 'rgba(0, 0, 0, 0.1)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: {
+                            size: 12
+                        }
                     }
+                }
+            },
+            elements: {
+                point: {
+                    hoverBackgroundColor: 'rgb(59, 130, 246)'
                 }
             }
         }
     });
 
-    // Consultation Types Chart
+    // Dynamic Consultation Types Chart
     const typesCtx = document.getElementById('consultationTypesChart').getContext('2d');
     const typesChart = new Chart(typesCtx, {
         type: 'doughnut',
         data: {
-            labels: ['چت متنی', 'تماس صوتی', 'تماس تصویری', 'حضوری'],
+            labels: consultationTypes.length > 0 ? consultationTypes.map(t => t.Type) : ['چت متنی', 'تماس صوتی', 'تماس تصویری', 'حضوری'],
             datasets: [{
-                data: [45, 25, 20, 10],
+                data: consultationTypes.length > 0 ? consultationTypes.map(t => t.Count) : [0, 0, 0, 0],
                 backgroundColor: [
                     'rgb(59, 130, 246)',
                     'rgb(34, 197, 94)',
                     'rgb(251, 191, 36)',
                     'rgb(239, 68, 68)'
-                ]
+                ],
+                borderWidth: 3,
+                borderColor: '#fff',
+                hoverBorderWidth: 4
             }]
         },
         options: {
@@ -295,16 +359,48 @@
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true,
+                        font: {
+                            size: 12
+                        }
+                    }
                 }
-            }
+            },
+            cutout: '60%'
         }
     });
 
-    // Time range change handler
+    // Enhanced time range change handler
     document.getElementById('timeRange').addEventListener('change', function() {
         const days = this.value;
-        // Here you would typically make an AJAX call to update the data
-        console.log('Time range changed to:', days, 'days');
+        // Add loading animation
+        this.style.opacity = '0.7';
+        this.disabled = true;
+        
+        // Simulate loading
+        setTimeout(() => {
+            this.style.opacity = '1';
+            this.disabled = false;
+            console.log('Time range changed to:', days, 'days');
+            // Here you would typically make an AJAX call to update the data
+        }, 1000);
+    });
+
+    // Add smooth scroll animations
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.bg-white');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s ease-out';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
     });
 </script>

@@ -16,7 +16,7 @@ public class Consultation
     public string? Notes { get; set; }
     public string? DoctorNotes { get; set; }
     public string? Prescription { get; set; }
-    public decimal Fee { get; set; }
+    public decimal? Fee { get; set; }
     public bool IsPaid { get; set; } = false;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }

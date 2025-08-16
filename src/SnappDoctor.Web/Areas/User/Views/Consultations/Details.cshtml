@@ -128,7 +128,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-1">هزینه مشاوره</label>
                                 <div class="bg-gray-50 p-3 rounded-lg">
-                                    <span class="text-gray-800 font-bold">@Model.Fee.ToString("N0") تومان</span>
+                                    <span class="text-gray-800 font-bold">@(Model.Fee?.ToString("N0") ?? "0") تومان</span>
                                 </div>
                             </div>
                             

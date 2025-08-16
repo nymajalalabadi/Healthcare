@@ -89,30 +89,140 @@ public class DashboardController : Controller
         var completedConsultations = consultations.Count(c => c.Status == Core.Enums.ConsultationStatus.Completed);
         var pendingConsultations = consultations.Count(c => c.Status == Core.Enums.ConsultationStatus.Pending);
 
-        // Calculate total spent (placeholder calculation)
+        // Calculate total spent from completed consultations
         var totalSpent = consultations.Where(c => c.Status == Core.Enums.ConsultationStatus.Completed)
-                                   .Sum(c => c.Fee);
+                                   .Sum(c => c.Fee ?? 0m);
+
+        // Get consultations for last 30 days for trend analysis
+        var thirtyDaysAgo = DateTime.Now.AddDays(-30);
+        var recentConsultations = consultations.Where(c => c.CreatedAt >= thirtyDaysAgo).ToList();
+
+        // Calculate weekly trend data (last 7 days)
+        var weeklyData = new List<int>();
+        var weekLabels = new List<string>();
+        for (int i = 6; i >= 0; i--)
+        {
+            var date = DateTime.Now.AddDays(-i);
+            var dayConsultations = recentConsultations.Count(c => c.CreatedAt.Date == date.Date);
+            weeklyData.Add(dayConsultations);
+            weekLabels.Add(date.ToString("dddd", new System.Globalization.CultureInfo("fa-IR")));
+        }
+
+        // Calculate consultation types distribution
+        var consultationTypes = consultations
+            .Where(c => c.Status == Core.Enums.ConsultationStatus.Completed)
+            .GroupBy(c => c.Type)
+            .Select(g => new { Type = g.Key, Count = g.Count() })
+            .OrderByDescending(x => x.Count)
+            .ToList();
+
+        // Get monthly spending data (last 6 months)
+        var monthlySpending = new List<object>();
+        var persianMonths = new[] { "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند" };
+        
+        for (int i = 5; i >= 0; i--)
+        {
+            var monthStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-i);
+            var monthEnd = monthStart.AddMonths(1).AddDays(-1);
+            var monthSpending = consultations
+                .Where(c => c.Status == Core.Enums.ConsultationStatus.Completed && 
+                           c.CreatedAt >= monthStart && c.CreatedAt <= monthEnd)
+                .Sum(c => c.Fee ?? 0m);
+            
+            monthlySpending.Add(new { 
+                Month = persianMonths[monthStart.Month - 1], 
+                Spending = monthSpending,
+                MonthIndex = monthStart.Month
+            });
+        }
+
+        // Get top doctors based on user's consultations
+        var topDoctors = consultations
+            .Where(c => c.Status == Core.Enums.ConsultationStatus.Completed && c.Doctor != null)
+            .GroupBy(c => c.Doctor)
+            .Select(g => new { 
+                Doctor = g.Key, 
+                ConsultationCount = g.Count(),
+                TotalRating = g.Sum(c => c.Doctor?.Rating ?? 0),
+                AverageRating = g.Average(c => c.Doctor?.Rating ?? 0)
+            })
+            .OrderByDescending(x => x.AverageRating)
+            .ThenByDescending(x => x.ConsultationCount)
+            .Take(5)
+            .Select(x => new { 
+                FullName = x.Doctor?.FullName ?? "نامشخص",
+                Specialization = x.Doctor?.Specialization ?? "تخصص نامشخص",
+                Rating = Math.Round(x.AverageRating, 1),
+                ReviewCount = x.ConsultationCount
+            })
+            .ToList();
+
+        // Get recent activity from actual consultations
+        var recentActivity = consultations
+            .OrderByDescending(c => c.CreatedAt)
+            .Take(10)
+            .Select(c => new
+            {
+                Description = GetActivityDescription(c),
+                Timestamp = c.CreatedAt,
+                Type = c.Status.ToString(),
+                ConsultationId = c.Id
+            })
+            .ToList();
+
+        // Calculate growth percentages (compare with previous period)
+        var previousPeriodStart = DateTime.Now.AddDays(-60);
+        var previousPeriodEnd = DateTime.Now.AddDays(-30);
+        var currentPeriodStart = DateTime.Now.AddDays(-30);
+        
+        var previousPeriodConsultations = consultations.Count(c => c.CreatedAt >= previousPeriodStart && c.CreatedAt <= previousPeriodEnd);
+        var currentPeriodConsultations = consultations.Count(c => c.CreatedAt >= currentPeriodStart);
+        
+        var consultationGrowth = previousPeriodConsultations > 0 
+            ? Math.Round(((double)(currentPeriodConsultations - previousPeriodConsultations) / previousPeriodConsultations) * 100, 1)
+            : 0.0;
+
+        var previousPeriodSpending = consultations
+            .Where(c => c.Status == Core.Enums.ConsultationStatus.Completed && 
+                       c.CreatedAt >= previousPeriodStart && c.CreatedAt <= previousPeriodEnd)
+            .Sum(c => c.Fee ?? 0m);
+        var currentPeriodSpending = consultations
+            .Where(c => c.Status == Core.Enums.ConsultationStatus.Completed && 
+                       c.CreatedAt >= currentPeriodStart)
+            .Sum(c => c.Fee ?? 0m);
+        
+        var spendingGrowth = previousPeriodSpending > 0 
+            ? Math.Round(((double)(currentPeriodSpending - previousPeriodSpending) / (double)previousPeriodSpending) * 100, 1)
+            : 0.0;
 
         ViewBag.TotalConsultations = totalConsultations;
         ViewBag.CompletedConsultations = completedConsultations;
         ViewBag.PendingConsultations = pendingConsultations;
         ViewBag.TotalSpent = totalSpent;
-
-        // Get top doctors (placeholder data for now)
-        var topDoctors = await _doctorRepository.GetAllAsync();
-        ViewBag.TopDoctors = topDoctors.Take(5).ToList();
-
-        // Get recent activity (placeholder data for now)
-        ViewBag.RecentActivity = new List<object>
-        {
-            new { Description = "مشاوره با دکتر احمدی تکمیل شد", Timestamp = DateTime.Now.AddDays(-1) },
-            new { Description = "نوبت جدید با دکتر محمدی رزرو شد", Timestamp = DateTime.Now.AddDays(-2) },
-            new { Description = "پروفایل بروزرسانی شد", Timestamp = DateTime.Now.AddDays(-3) },
-            new { Description = "مشاوره با دکتر رضایی لغو شد", Timestamp = DateTime.Now.AddDays(-4) },
-            new { Description = "نوبت با دکتر کریمی تأیید شد", Timestamp = DateTime.Now.AddDays(-5) }
-        };
+        
+        // Analytics data
+        ViewBag.WeeklyData = weeklyData;
+        ViewBag.WeekLabels = weekLabels;
+        ViewBag.ConsultationTypes = consultationTypes;
+        ViewBag.MonthlySpending = monthlySpending;
+        ViewBag.TopDoctors = topDoctors;
+        ViewBag.RecentActivity = recentActivity;
+        ViewBag.ConsultationGrowth = consultationGrowth;
+        ViewBag.SpendingGrowth = spendingGrowth;
 
         return View(user);
+    }
+
+    private string GetActivityDescription(Core.Entities.Consultation consultation)
+    {
+        return consultation.Status switch
+        {
+            Core.Enums.ConsultationStatus.Pending => $"نوبت جدید با دکتر {consultation.Doctor?.FullName ?? "نامشخص"} رزرو شد",
+            Core.Enums.ConsultationStatus.Confirmed => $"نوبت با دکتر {consultation.Doctor?.FullName ?? "نامشخص"} تأیید شد",
+            Core.Enums.ConsultationStatus.Completed => $"مشاوره با دکتر {consultation.Doctor?.FullName ?? "نامشخص"} تکمیل شد",
+            Core.Enums.ConsultationStatus.Cancelled => $"نوبت با دکتر {consultation.Doctor?.FullName ?? "نامشخص"} لغو شد",
+            _ => $"وضعیت مشاوره تغییر کرد: {consultation.Status}"
+        };
     }
 
     public async Task<IActionResult> Schedule()

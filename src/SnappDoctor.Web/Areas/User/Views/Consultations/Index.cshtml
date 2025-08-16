@@ -51,7 +51,7 @@
                                     </div>
                                     <div>
                                         <span class="text-gray-500">هزینه:</span>
-                                        <p class="font-medium">@consultation.Fee.ToString("N0") تومان</p>
+                                        <p class="font-medium">@(consultation.Fee?.ToString("N0") ?? "0") تومان</p>
                                     </div>
                                 </div>
                             </div>
