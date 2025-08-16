@@ -148,47 +148,44 @@
                     یادآوری‌ها
                 </h3>
                 <div class="space-y-4">
-                    <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-6 border border-yellow-100 hover:border-yellow-300 transition-all duration-200 transform hover:scale-[1.02]">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <div class="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center ml-4 shadow-lg">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-gray-900">مشاوره با دکتر احمدی</p>
-                                    <p class="text-sm text-gray-600">فردا ساعت 10:00</p>
-                                </div>
-                            </div>
-                            <button class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100 hover:border-green-300 transition-all duration-200 transform hover:scale-[1.02]">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center ml-4 shadow-lg">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-gray-900">تجدید نسخه</p>
-                                    <p class="text-sm text-gray-600">پس‌فردا</p>
+                    @if (ViewBag.Reminders != null && ViewBag.Reminders.Count > 0)
+                    {
+                        @foreach (var reminder in ViewBag.Reminders)
+                        {
+                            <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-6 border border-yellow-100 hover:border-yellow-300 transition-all duration-200 transform hover:scale-[1.02]">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center">
+                                        <div class="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center ml-4 shadow-lg">
+                                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-gray-900">@reminder.Title</p>
+                                            <p class="text-sm text-gray-600">@reminder.DateTime</p>
+                                        </div>
+                                    </div>
+                                    <button class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
-                            <button class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center py-12 text-gray-500">
+                            <div class="w-24 h-24 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                            </button>
+                            </div>
+                            <p class="text-lg font-medium text-gray-600">یادآوری‌ای ندارید</p>
+                            <p class="text-sm text-gray-400 mt-2">یادآوری جدید اضافه کنید</p>
                         </div>
-                    </div>
+                    }
                 </div>
 
                 <button onclick="addNewReminder()" class="w-full mt-6 p-4 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:text-gray-700 hover:border-gray-400 transition-all duration-200 transform hover:scale-[1.02]">

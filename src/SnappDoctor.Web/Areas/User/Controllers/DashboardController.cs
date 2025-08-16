@@ -64,13 +64,18 @@ public class DashboardController : Controller
         ViewBag.CompletedConsultations = completedConsultations;
         ViewBag.PendingConsultations = pendingConsultations;
 
-        // Get recent activity (placeholder data for now)
-        ViewBag.RecentActivity = new List<object>
-        {
-            new { Description = "مشاوره با دکتر احمدی تکمیل شد", Timestamp = DateTime.Now.AddDays(-1) },
-            new { Description = "نوبت جدید با دکتر محمدی رزرو شد", Timestamp = DateTime.Now.AddDays(-2) },
-            new { Description = "پروفایل بروزرسانی شد", Timestamp = DateTime.Now.AddDays(-3) }
-        };
+        // Get recent activity from consultations
+        var recentActivity = consultations.Any() ? consultations
+            .OrderByDescending(c => c.CreatedAt)
+            .Take(10)
+            .Select(c => new
+            {
+                Description = GetActivityDescription(c),
+                Timestamp = c.CreatedAt
+            })
+            .ToList() : null;
+
+        ViewBag.RecentActivity = recentActivity;
 
         return View(user);
     }
@@ -259,8 +264,13 @@ public class DashboardController : Controller
         ViewBag.UpcomingScheduled = upcomingScheduled;
         ViewBag.CancelledScheduled = cancelledScheduled;
 
+        // Get reminders from database (currently empty until reminder system is implemented)
+        ViewBag.Reminders = new List<object>();
+
         return View(user);
     }
+
+
 
     [HttpPost]
     public async Task<IActionResult> UpdateProfile(string firstName, string lastName)
