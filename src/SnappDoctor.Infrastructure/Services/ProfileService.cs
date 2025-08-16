@@ -166,4 +166,10 @@ public class ProfileService : IProfileService
 
         return viewModel;
     }
+
+    public async Task<List<Consultation>> GetUserConsultationsAsync(string userId)
+    {
+        var consultations = await _consultationRepository.GetUserConsultationsAsync(userId);
+        return consultations.ToList();
+    }
 } 

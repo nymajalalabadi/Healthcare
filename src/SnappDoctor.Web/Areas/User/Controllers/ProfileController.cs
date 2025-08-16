@@ -28,7 +28,63 @@ public class ProfileController : Controller
         var profile = await _profileService.GetProfileAsync(userId);
         if (profile == null) return NotFound();
 
+        // Get dynamic data for the profile page
+        var consultations = await _profileService.GetUserConsultationsAsync(userId);
+        
+        // Calculate statistics
+        var totalConsultations = consultations.Count;
+        var completedConsultations = consultations.Count(c => c.Status == Core.Enums.ConsultationStatus.Completed);
+        var pendingConsultations = consultations.Count(c => c.Status == Core.Enums.ConsultationStatus.Pending || c.Status == Core.Enums.ConsultationStatus.Confirmed);
+
+        // Get recent activity (last 10 consultations) - only if there are actual consultations
+        var recentActivity = consultations.Any() ? consultations
+            .OrderByDescending(c => c.CreatedAt)
+            .Take(10)
+            .Select(c => new
+            {
+                Description = GetActivityDescription(c),
+                Timestamp = c.CreatedAt,
+                Type = c.Status.ToString(),
+                ConsultationId = c.Id
+            })
+            .ToList() : null;
+
+        // Populate ViewBag with dynamic data
+        ViewBag.TotalConsultations = totalConsultations;
+        ViewBag.CompletedConsultations = completedConsultations;
+        ViewBag.PendingConsultations = pendingConsultations;
+        ViewBag.RecentActivity = recentActivity;
+
         return View(profile);
+    }
+
+    private string GetActivityDescription(Core.Entities.Consultation consultation)
+    {
+        var doctorName = consultation.Doctor?.FullName ?? "دکتر نامشخص";
+        var consultationType = GetConsultationTypeText(consultation.Type);
+        
+        return consultation.Status switch
+        {
+            Core.Enums.ConsultationStatus.Confirmed => $"نوبت {consultationType} با {doctorName} تأیید شد",
+            Core.Enums.ConsultationStatus.Pending => $"درخواست {consultationType} با {doctorName} در انتظار تأیید",
+            Core.Enums.ConsultationStatus.InProgress => $"مشاوره {consultationType} با {doctorName} در حال انجام",
+            Core.Enums.ConsultationStatus.Completed => $"مشاوره {consultationType} با {doctorName} تکمیل شد",
+            Core.Enums.ConsultationStatus.Cancelled => $"مشاوره {consultationType} با {doctorName} لغو شد",
+            Core.Enums.ConsultationStatus.NoShow => $"مشاوره {consultationType} با {doctorName} لغو شد (عدم حضور)",
+            _ => $"تغییر وضعیت مشاوره {consultationType} با {doctorName}"
+        };
+    }
+
+    private string GetConsultationTypeText(Core.Enums.ConsultationType type)
+    {
+        return type switch
+        {
+            Core.Enums.ConsultationType.TextChat => "چت متنی",
+            Core.Enums.ConsultationType.VoiceCall => "تماس صوتی",
+            Core.Enums.ConsultationType.VideoCall => "تماس تصویری",
+            Core.Enums.ConsultationType.InPerson => "حضوری",
+            _ => "مشاوره"
+        };
     }
 
     [HttpGet]
