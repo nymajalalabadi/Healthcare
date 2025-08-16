@@ -239,7 +239,8 @@ public class DashboardController : Controller
             c.Status == Core.Enums.ConsultationStatus.Pending || 
             c.Status == Core.Enums.ConsultationStatus.Confirmed)
             .OrderBy(c => c.ScheduledAt)
-            .Take(10);
+            .Take(10)
+            .ToList();
 
         ViewBag.UpcomingConsultations = upcomingConsultations;
 
