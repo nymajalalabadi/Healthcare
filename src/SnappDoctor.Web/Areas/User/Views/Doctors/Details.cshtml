@@ -26,12 +26,12 @@
                     </span>
                     @if (Model.IsAvailable)
                     {
-                        <button onclick="openBookingModal(@Model.Id, '@Model.FullName')" class="bg-white/20 backdrop-blur-sm text-white px-8 py-3 rounded-xl hover:bg-white/30 transition-all duration-200 border border-white/30 transform hover:scale-105 shadow-lg">
-                            <svg class="w-5 h-5 inline ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <a href="@Url.Action("BookConsultationPage", new { id = Model.Id })" class="bg-white/20 backdrop-blur-sm text-white px-8 py-3 rounded-xl hover:bg-white/30 transition-all duration-200 border border-white/30 transform hover:scale-105 shadow-lg inline-flex items-center">
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
-                            رزرو فوری
-                        </button>
+                            رزرو مشاوره
+                        </a>
                     }
                 </div>
             </div>
@@ -155,52 +155,124 @@
                 </div>
             </div>
 
-            <!-- Doctor Details -->
-            <div class="lg:col-span-2">
-                <!-- Consultation Types & Fees -->
-                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">انواع مشاوره و هزینه‌ها</h3>
+            <!-- Enhanced Doctor Details -->
+            <div class="xl:col-span-3 space-y-8">
+                <!-- Enhanced Consultation Types & Fees -->
+                <div class="bg-white rounded-2xl shadow-xl p-8 transform hover:shadow-2xl transition-all duration-300 border border-gray-100">
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center ml-4 shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">انواع مشاوره و تعرفه‌ها</h3>
+                    </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="border border-gray-200 rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="font-medium text-gray-800">چت متنی</span>
-                                <span class="text-green-600 font-bold">@Model.ConsultationFee.ToString("N0") تومان</span>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Text Chat -->
+                        <div class="bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-blue-200 rounded-2xl p-6 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center ml-3">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="font-bold text-blue-800 text-lg">💬 چت متنی</span>
+                                </div>
+                                <span class="text-2xl font-bold text-blue-600">@Model.ConsultationFee.ToString("N0") تومان</span>
                             </div>
-                            <p class="text-sm text-gray-600">مشاوره متنی در هر زمان</p>
+                            <p class="text-blue-700 font-medium">مشاوره متنی آنلاین در هر زمان از شبانه‌روز</p>
+                            <div class="mt-4 flex items-center text-sm text-blue-600">
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                پاسخ سریع تا 30 دقیقه
+                            </div>
                         </div>
                         
-                        <div class="border border-gray-200 rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="font-medium text-gray-800">تماس صوتی</span>
-                                <span class="text-green-600 font-bold">@((Model.ConsultationFee * 1.5m).ToString("N0")) تومان</span>
+                        <!-- Voice Call -->
+                        <div class="bg-gradient-to-br from-green-50 to-emerald-100 border-2 border-green-200 rounded-2xl p-6 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center ml-3">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="font-bold text-green-800 text-lg">📞 تماس صوتی</span>
+                                </div>
+                                <span class="text-2xl font-bold text-green-600">@((Model.ConsultationFee * 1.5m).ToString("N0")) تومان</span>
                             </div>
-                            <p class="text-sm text-gray-600">مشاوره صوتی 15 دقیقه‌ای</p>
+                            <p class="text-green-700 font-medium">مشاوره صوتی زنده 20 دقیقه‌ای</p>
+                            <div class="mt-4 flex items-center text-sm text-green-600">
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                تشخیص دقیق‌تر و مؤثر
+                            </div>
                         </div>
                         
-                        <div class="border border-gray-200 rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="font-medium text-gray-800">تماس تصویری</span>
-                                <span class="text-green-600 font-bold">@((Model.ConsultationFee * 2m).ToString("N0")) تومان</span>
+                        <!-- Video Call -->
+                        <div class="bg-gradient-to-br from-purple-50 to-pink-100 border-2 border-purple-200 rounded-2xl p-6 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center ml-3">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="font-bold text-purple-800 text-lg">📹 تماس تصویری</span>
+                                </div>
+                                <span class="text-2xl font-bold text-purple-600">@((Model.ConsultationFee * 2m).ToString("N0")) تومان</span>
                             </div>
-                            <p class="text-sm text-gray-600">مشاوره تصویری 15 دقیقه‌ای</p>
+                            <p class="text-purple-700 font-medium">مشاوره تصویری HD کیفیت 20 دقیقه‌ای</p>
+                            <div class="mt-4 flex items-center text-sm text-purple-600">
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                معاینه بصری دقیق
+                            </div>
                         </div>
                         
-                        <div class="border border-gray-200 rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="font-medium text-gray-800">مشاوره حضوری</span>
-                                <span class="text-green-600 font-bold">@((Model.ConsultationFee * 3m).ToString("N0")) تومان</span>
+                        <!-- In-Person -->
+                        <div class="bg-gradient-to-br from-orange-50 to-yellow-100 border-2 border-orange-200 rounded-2xl p-6 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center ml-3">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="font-bold text-orange-800 text-lg">🏥 مشاوره حضوری</span>
+                                </div>
+                                <span class="text-2xl font-bold text-orange-600">@((Model.ConsultationFee * 3m).ToString("N0")) تومان</span>
                             </div>
-                            <p class="text-sm text-gray-600">مشاوره حضوری در مطب</p>
+                            <p class="text-orange-700 font-medium">ویزیت کامل در مطب پزشک</p>
+                            <div class="mt-4 flex items-center text-sm text-orange-600">
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                معاینه فیزیکی کامل
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Schedule -->
-                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">برنامه کاری</h3>
+                <!-- Enhanced Schedule -->
+                <div class="bg-white rounded-2xl shadow-xl p-8 transform hover:shadow-2xl transition-all duration-300 border border-gray-100">
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center ml-4 shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">برنامه کاری هفتگی</h3>
+                    </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-7 gap-2">
+                    <div class="grid grid-cols-2 md:grid-cols-7 gap-4">
                         @{
                             var days = new[] { "شنبه", "یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه" };
                             var currentDay = DateTime.Now.DayOfWeek;
@@ -211,156 +283,99 @@
                         {
                             var isToday = i == persianDayIndex;
                             <div class="text-center">
-                                <div class="text-sm font-medium text-gray-600 mb-1">@days[i]</div>
-                                <div class="p-2 rounded-lg @(isToday ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-600")">
+                                <div class="text-sm font-bold text-gray-700 mb-3">@days[i]</div>
+                                <div class="@(isToday ? "bg-gradient-to-br from-blue-100 to-indigo-200 border-2 border-blue-300 text-blue-800" : "bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200 text-gray-600") p-4 rounded-2xl transform hover:scale-105 transition-all duration-300 shadow-lg">
                                     @if (Model.IsAvailable)
                                     {
-                                        <span class="text-xs">8:00-20:00</span>
+                                        <div class="space-y-2">
+                                            <div class="flex items-center justify-center">
+                                                <svg class="w-4 h-4 ml-1 @(isToday ? "text-blue-600" : "text-green-600")" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                <span class="text-xs font-bold">فعال</span>
+                                            </div>
+                                            <div class="text-xs font-medium">8:00 - 20:00</div>
+                                        </div>
                                     }
                                     else
                                     {
-                                        <span class="text-xs">تعطیل</span>
+                                        <div class="space-y-2">
+                                            <div class="flex items-center justify-center">
+                                                <svg class="w-4 h-4 ml-1 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                                <span class="text-xs font-bold text-red-600">تعطیل</span>
+                                            </div>
+                                        </div>
                                     }
                                 </div>
                             </div>
                         }
                     </div>
+                    
+                    <div class="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-200">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-blue-600 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <div>
+                                <p class="text-blue-800 font-bold text-sm">💡 نکته مهم</p>
+                                <p class="text-blue-700 text-sm mt-1">زمان‌های ارائه شده بر اساس ساعت محلی ایران می‌باشد. برای رزرو نوبت دقیق لطفاً تماس بگیرید.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Reviews -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">نظرات بیماران</h3>
-                    
-                    <div class="text-center py-8">
-                        <div class="text-4xl font-bold text-blue-600 mb-2">@Model.Rating</div>
-                        <div class="flex justify-center mb-2">
-                            @for (int i = 1; i <= 5; i++)
-                            {
-                                if (i <= Model.Rating)
-                                {
-                                    <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                    </svg>
-                                }
-                                else
-                                {
-                                    <svg class="w-6 h-6 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                    </svg>
-                                }
-                            }
-                        </div>
-                        <p class="text-gray-600">@Model.ReviewCount نظر</p>
-                    </div>
-                    
-                    <!-- Sample Reviews -->
-                    <div class="space-y-4">
-                        <div class="border-l-4 border-blue-500 pl-4">
-                            <div class="flex items-center mb-2">
-                                <div class="flex text-yellow-400">
-                                    @for (int i = 1; i <= 5; i++)
-                                    {
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                        </svg>
-                                    }
-                                </div>
-                                <span class="text-sm text-gray-500 mr-2">2 روز پیش</span>
-                            </div>
-                            <p class="text-gray-700">دکتر بسیار حرفه‌ای و دلسوزی هستند. مشاوره‌ای که گرفتم خیلی مفید بود.</p>
-                        </div>
-                        
-                        <div class="border-l-4 border-blue-500 pl-4">
-                            <div class="flex items-center mb-2">
-                                <div class="flex text-yellow-400">
-                                    @for (int i = 1; i <= 4; i++)
-                                    {
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                        </svg>
-                                    }
-                                </div>
-                                <span class="text-sm text-gray-500 mr-2">1 هفته پیش</span>
-                            </div>
-                            <p class="text-gray-700">تجربه خوبی داشتم. دکتر وقت‌شناس و دقیق هستند.</p>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>
 </div>
 
-<!-- Booking Modal -->
-<div id="bookingModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
-    <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-xl shadow-lg max-w-md w-full">
-            <div class="p-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">رزرو نوبت مشاوره</h3>
-                <p class="text-gray-600 mb-6">برای رزرو نوبت با دکتر <span id="doctorName"></span>، لطفاً نوع مشاوره و زمان مورد نظر خود را انتخاب کنید.</p>
-                
-                <form id="bookingForm" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">نوع مشاوره</label>
-                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <option value="text">چت متنی</option>
-                            <option value="voice">تماس صوتی</option>
-                            <option value="video">تماس تصویری</option>
-                            <option value="inperson">حضوری</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">تاریخ</label>
-                        <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">زمان</label>
-                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <option value="09:00">09:00</option>
-                            <option value="10:00">10:00</option>
-                            <option value="11:00">11:00</option>
-                            <option value="14:00">14:00</option>
-                            <option value="15:00">15:00</option>
-                            <option value="16:00">16:00</option>
-                        </select>
-                    </div>
-                </form>
-                
-                <div class="flex justify-end space-x-3 space-x-reverse mt-6">
-                    <button onclick="closeBookingModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800">
-                        انصراف
-                    </button>
-                    <button onclick="submitBooking()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                        رزرو نوبت
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<script>
-    function openBookingModal(doctorId, doctorName) {
-        document.getElementById('doctorName').textContent = doctorName;
-        document.getElementById('bookingModal').classList.remove('hidden');
-    }
-    
-    function closeBookingModal() {
-        document.getElementById('bookingModal').classList.add('hidden');
-    }
-    
-    function submitBooking() {
-        // Here you would submit the booking form
-        alert('درخواست رزرو نوبت شما ثبت شد. در اسرع وقت با شما تماس خواهیم گرفت.');
-        closeBookingModal();
-    }
-    
-    // Close modal when clicking outside
-    document.getElementById('bookingModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeBookingModal();
-        }
-    });
-</script>
+
+@section Scripts {
+    <script>
+        // Add smooth page load animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate sidebar profile card
+            const profileCard = document.querySelector('.sticky');
+            if (profileCard) {
+                profileCard.style.opacity = '0';
+                profileCard.style.transform = 'translateX(-30px)';
+                
+                setTimeout(() => {
+                    profileCard.style.transition = 'all 0.8s ease-out';
+                    profileCard.style.opacity = '1';
+                    profileCard.style.transform = 'translateX(0)';
+                }, 200);
+            }
+
+            // Animate main content cards
+            const contentCards = document.querySelectorAll('.xl\\:col-span-3 > div');
+            contentCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(40px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.8s ease-out';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 400 + (index * 150));
+            });
+
+            // Animate review cards
+            const reviewCards = document.querySelectorAll('.space-y-6 > div:not(h4)');
+            reviewCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateX(50px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease-out';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateX(0)';
+                }, 1000 + (index * 200));
+            });
+        });
+    </script>
+}

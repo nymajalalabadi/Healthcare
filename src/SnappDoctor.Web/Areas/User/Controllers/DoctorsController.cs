@@ -57,8 +57,25 @@ public class DoctorsController : Controller
         return View(doctor);
     }
 
+    public async Task<IActionResult> BookConsultationPage(int id)
+    {
+        var doctor = await _doctorRepository.GetByIdAsync(id);
+        if (doctor == null)
+        {
+            return NotFound();
+        }
+
+        if (!doctor.IsAvailable)
+        {
+            TempData["Error"] = "پزشک انتخابی در دسترس نیست";
+            return RedirectToAction("Details", new { id });
+        }
+
+        return View(doctor);
+    }
+
     [HttpPost]
-    public async Task<IActionResult> BookConsultation(int doctorId, ConsultationType type, string symptoms)
+    public async Task<IActionResult> BookConsultation(int doctorId, ConsultationType type, string symptoms, DateTime appointmentDate, string appointmentTime)
     {
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
@@ -70,7 +87,40 @@ public class DoctorsController : Controller
         if (doctor == null || !doctor.IsAvailable)
         {
             TempData["Error"] = "پزشک انتخابی در دسترس نیست";
-            return RedirectToAction("Details", new { id = doctorId });
+            return RedirectToAction("BookConsultationPage", new { id = doctorId });
+        }
+
+        // Validate appointment date and time
+        if (appointmentDate == default(DateTime) || string.IsNullOrEmpty(appointmentTime))
+        {
+            TempData["Error"] = "لطفاً تاریخ و ساعت مشاوره را انتخاب کنید";
+            return RedirectToAction("BookConsultationPage", new { id = doctorId });
+        }
+
+        // Combine date and time
+        DateTime scheduledAt;
+        try
+        {
+            scheduledAt = appointmentDate.Date.Add(TimeSpan.Parse(appointmentTime));
+        }
+        catch
+        {
+            TempData["Error"] = "فرمت ساعت وارد شده صحیح نیست";
+            return RedirectToAction("BookConsultationPage", new { id = doctorId });
+        }
+
+        // Check if the appointment time is in the future
+        if (scheduledAt <= DateTime.UtcNow)
+        {
+            TempData["Error"] = "زمان نوبت باید در آینده باشد";
+            return RedirectToAction("BookConsultationPage", new { id = doctorId });
+        }
+
+        // Check if appointment is within working hours (8 AM to 8 PM)
+        if (scheduledAt.Hour < 8 || scheduledAt.Hour > 20)
+        {
+            TempData["Error"] = "ساعت انتخابی باید بین 8 صبح تا 8 شب باشد";
+            return RedirectToAction("BookConsultationPage", new { id = doctorId });
         }
 
         var consultation = new Consultation
@@ -80,13 +130,14 @@ public class DoctorsController : Controller
             Type = type,
             PatientSymptoms = symptoms,
             Status = ConsultationStatus.Pending,
-            ScheduledAt = DateTime.UtcNow.AddHours(1), // Default to 1 hour from now
-            Fee = GetConsultationFee(type)
+            ScheduledAt = scheduledAt,
+            Fee = GetConsultationFee(type),
+            CreatedAt = DateTime.UtcNow
         };
 
         var createdConsultation = await _consultationRepository.CreateAsync(consultation);
         
-        TempData["Success"] = "درخواست مشاوره با موفقیت ثبت شد";
+        TempData["Success"] = $"مشاوره با موفقیت در تاریخ {appointmentDate:yyyy/MM/dd} ساعت {appointmentTime} رزرو شد";
         return RedirectToAction("Index", "Consultations");
     }
 

@@ -102,9 +102,7 @@
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 mb-2">دکتر @doctor.FullName</h3>
                         <span class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-medium bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border border-blue-200">
-                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a1 1 0 00-.755.302l-.613.613a1 1 0 01-1.022.271c-1.18-.485-2.145-1.45-2.63-2.63a1 1 0 01.271-1.022l.613-.613a1 1 0 00.302-.755l-.477-2.387a2 2 0 00-.547-1.022C10.346 6.09 9.4 6 8.175 6H7a2 2 0 00-2 2 15.3 15.3 0 006.404 10.404A2 2 0 0013 16h1.175c1.225 0 2.171-.346 2.683-1.158z"></path>
-                            </svg>
+                            
                             @doctor.Specialization
                         </span>
                     </div>
@@ -148,12 +146,12 @@
                         </a>
                         @if (doctor.IsAvailable)
                         {
-                            <button onclick="openBookingModal(@doctor.Id, '@doctor.FullName')" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-lg">
-                                <svg class="w-4 h-4 inline ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <a href="@Url.Action("BookConsultationPage", new { id = doctor.Id })" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-lg text-center inline-flex items-center justify-center">
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                 </svg>
                                 رزرو نوبت
-                            </button>
+                            </a>
                         }
                         else
                         {
@@ -190,106 +188,10 @@
     </div>
 </div>
 
-<!-- Enhanced Booking Modal -->
-<div id="bookingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center backdrop-blur-sm">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
-        <div class="p-8">
-            <div class="flex items-center justify-between mb-8">
-                <div class="flex items-center">
-                    <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center ml-4">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-800">رزرو مشاوره</h3>
-                </div>
-                <button onclick="closeBookingModal()" class="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-100">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            
-            <form id="bookingForm" method="post" action="/User/Doctors/BookConsultation" class="space-y-6">
-                <input type="hidden" id="doctorId" name="doctorId" />
-                
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-3">نوع مشاوره</label>
-                    <select name="type" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white" required>
-                        <option value="1" class="py-2">💬 چت متنی - 50,000 تومان</option>
-                        <option value="2" class="py-2">📞 تماس صوتی - 80,000 تومان</option>
-                        <option value="3" class="py-2">📹 تماس تصویری - 120,000 تومان</option>
-                        <option value="4" class="py-2">🏥 حضوری - 200,000 تومان</option>
-                    </select>
-                </div>
 
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-3">علائم و شکایات</label>
-                    <textarea name="symptoms" rows="4" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white resize-none" placeholder="لطفاً علائم و مشکلات خود را به تفصیل شرح دهید..." required></textarea>
-                </div>
-
-                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl border border-blue-200">
-                    <div class="flex items-center">
-                        <svg class="w-5 h-5 text-blue-600 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <span class="text-blue-700 text-sm font-medium">درخواست شما پس از بررسی توسط پزشک تأیید خواهد شد</span>
-                    </div>
-                </div>
-            </form>
-            
-            <div class="flex space-x-4 space-x-reverse mt-8">
-                <button onclick="closeBookingModal()" class="flex-1 px-6 py-3 text-gray-600 hover:text-gray-800 transition-colors duration-200 rounded-xl hover:bg-gray-100 font-medium">
-                    انصراف
-                </button>
-                <button onclick="document.getElementById('bookingForm').submit()" class="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 transform hover:scale-105 shadow-lg font-medium">
-                    <svg class="w-5 h-5 inline ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    تأیید و رزرو
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 
 @section Scripts {
     <script>
-        function openBookingModal(doctorId, doctorName) {
-            document.getElementById('doctorId').value = doctorId;
-            document.querySelector('#bookingModal h3').textContent = 'رزرو مشاوره با دکتر ' + doctorName;
-            
-            const modal = document.getElementById('bookingModal');
-            const modalContent = document.getElementById('modalContent');
-            
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modalContent.classList.remove('scale-95', 'opacity-0');
-                modalContent.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
-        function closeBookingModal() {
-            const modal = document.getElementById('bookingModal');
-            const modalContent = document.getElementById('modalContent');
-            
-            modalContent.classList.add('scale-95', 'opacity-0');
-            modalContent.classList.remove('scale-100', 'opacity-100');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                // Reset form
-                document.getElementById('bookingForm').reset();
-            }, 300);
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('bookingModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeBookingModal();
-            }
-        });
-
         // Add smooth scroll animations
         document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.group');
