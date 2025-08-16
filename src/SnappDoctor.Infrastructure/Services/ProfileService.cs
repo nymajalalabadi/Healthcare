@@ -2,17 +2,21 @@ using Microsoft.AspNetCore.Identity;
 using SnappDoctor.Application.Contracts;
 using SnappDoctor.Application.DTOs.User;
 using SnappDoctor.Core.Entities;
+using SnappDoctor.Application.DTOs.Doctor;
+using SnappDoctor.Core.Enums;
 
 namespace SnappDoctor.Infrastructure.Services;
 
 public class ProfileService : IProfileService
 {
     private readonly UserManager<User> _userManager;
+    private readonly IConsultationRepository _consultationRepository;
     private readonly string _uploadsPath;
 
-    public ProfileService(UserManager<User> userManager)
+    public ProfileService(UserManager<User> userManager, IConsultationRepository consultationRepository)
     {
         _userManager = userManager;
+        _consultationRepository = consultationRepository;
         _uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "profiles");
     }
 
@@ -106,5 +110,60 @@ public class ProfileService : IProfileService
         {
             return null;
         }
+    }
+
+    public async Task<DoctorAnalyticsViewModel> GetDoctorAnalyticsAsync(int doctorId)
+    {
+        var consultations = await _consultationRepository.GetDoctorConsultationsAsync(doctorId);
+        
+        var viewModel = new DoctorAnalyticsViewModel
+        {
+            TotalRevenue = consultations.Where(c => c.Status == ConsultationStatus.Completed).Sum(c => c.Fee),
+            TotalConsultations = consultations.Count(),
+            TotalPatients = consultations.Select(c => c.UserId).Distinct().Count(),
+            // Assuming average daily consultations calculation might need a date range, for now just a placeholder
+            AverageDailyConsultations = consultations.Any() ? (double)consultations.Count() / 30 : 0, // Placeholder for 30 days
+            
+            ChatConsultations = consultations.Count(c => c.Type == ConsultationType.TextChat),
+            VoiceCallConsultations = consultations.Count(c => c.Type == ConsultationType.VoiceCall),
+            VideoCallConsultations = consultations.Count(c => c.Type == ConsultationType.VideoCall),
+            InPersonConsultations = consultations.Count(c => c.Type == ConsultationType.InPerson),
+
+            // Patient Satisfaction (placeholder - assuming a review system would provide this)
+            PatientSatisfactionRating = 4.8, // Placeholder
+            TotalRatings = 124, // Placeholder
+            
+            RecentActivities = new List<RecentActivityDto>()
+        };
+
+        // Populate Recent Activities (example data based on consultation status)
+        foreach (var consultation in consultations.OrderByDescending(c => c.CreatedAt).Take(3))
+        {
+            var activity = new RecentActivityDto
+            {
+                Description = $"مشاوره با {consultation.User?.FirstName} {consultation.User?.LastName} ",
+                TimeAgo = (DateTime.UtcNow - consultation.CreatedAt).TotalHours < 24 ? 
+                            $"{(int)(DateTime.UtcNow - consultation.CreatedAt).TotalHours} ساعت پیش" :
+                            $"{(int)(DateTime.UtcNow - consultation.CreatedAt).TotalDays} روز پیش",
+                Type = "Consultation"
+            };
+
+            if (consultation.Status == ConsultationStatus.Completed)
+            {
+                activity.Type = "ConsultationCompleted";
+                activity.Description += "تکمیل شد";
+                activity.Value = $"+{consultation.Fee.ToString("N0")} تومان";
+            }
+            else if (consultation.Status == ConsultationStatus.Pending)
+            {
+                activity.Type = "NewConsultation";
+                activity.Description += "در انتظار تأیید";
+                activity.Value = "در انتظار تأیید";
+            }
+            // Add other statuses/types as needed
+            viewModel.RecentActivities.Add(activity);
+        }
+
+        return viewModel;
     }
 } 

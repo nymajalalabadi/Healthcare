@@ -15,17 +15,20 @@ public class ProfileController : Controller
     private readonly UserManager<SnappDoctor.Core.Entities.User> _userManager;
     private readonly IWebHostEnvironment _environment;
     private readonly IScheduleService _scheduleService;
+    private readonly IProfileService _profileService;
 
     public ProfileController(
         IDoctorRepository doctorRepository,
         UserManager<SnappDoctor.Core.Entities.User> userManager,
         IWebHostEnvironment environment,
-        IScheduleService scheduleService)
+        IScheduleService scheduleService,
+        IProfileService profileService)
     {
         _doctorRepository = doctorRepository;
         _userManager = userManager;
         _environment = environment;
         _scheduleService = scheduleService;
+        _profileService = profileService;
     }
 
     private async Task<SnappDoctor.Core.Entities.Doctor?> GetCurrentDoctorAsync()
@@ -290,8 +293,7 @@ public class ProfileController : Controller
             return RedirectToAction("Login", "Auth", new { area = "" });
         }
 
-        // This would contain analytics and reports
-        // For now, return a basic view
-        return View(doctor);
+        var analyticsData = await _profileService.GetDoctorAnalyticsAsync(doctor.Id);
+        return View(analyticsData);
     }
 } 
