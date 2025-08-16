@@ -90,6 +90,49 @@ public class DoctorsController : Controller
         return RedirectToAction("Index", "Consultations");
     }
 
+    [HttpPost]
+    public async Task<IActionResult> BookAppointment(int doctorId, ConsultationType type, DateTime appointmentDate, string appointmentTime)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Auth", new { area = "" });
+        }
+
+        var doctor = await _doctorRepository.GetByIdAsync(doctorId);
+        if (doctor == null || !doctor.IsAvailable)
+        {
+            TempData["Error"] = "پزشک انتخابی در دسترس نیست";
+            return RedirectToAction("Details", new { id = doctorId });
+        }
+
+        // Combine date and time
+        var scheduledAt = appointmentDate.Date.Add(TimeSpan.Parse(appointmentTime));
+
+        // Check if the appointment time is in the future
+        if (scheduledAt <= DateTime.UtcNow)
+        {
+            TempData["Error"] = "زمان نوبت باید در آینده باشد";
+            return RedirectToAction("Details", new { id = doctorId });
+        }
+
+        var consultation = new Consultation
+        {
+            UserId = user.Id,
+            DoctorId = doctorId,
+            Type = type,
+            Status = ConsultationStatus.Pending,
+            ScheduledAt = scheduledAt,
+            Fee = GetConsultationFee(type),
+            CreatedAt = DateTime.UtcNow
+        };
+
+        var createdConsultation = await _consultationRepository.CreateAsync(consultation);
+        
+        TempData["Success"] = "نوبت مشاوره با موفقیت رزرو شد";
+        return RedirectToAction("Index", "Consultations");
+    }
+
     private decimal GetConsultationFee(ConsultationType type)
     {
         return type switch

@@ -90,6 +90,14 @@
                                             <p class="text-sm text-blue-800">@consultation.PatientSymptoms</p>
                                         </div>
                                     }
+
+                                    @if (!string.IsNullOrEmpty(consultation.Notes))
+                                    {
+                                        <div class="mt-4 bg-yellow-50 rounded-lg p-3 border border-yellow-100">
+                                            <span class="text-yellow-700 text-sm font-medium block mb-2">یادداشت‌های بیمار:</span>
+                                            <p class="text-sm text-yellow-800">@consultation.Notes</p>
+                                        </div>
+                                    }
                                 </div>
                                 
                                 <div class="flex flex-col items-end space-y-3">

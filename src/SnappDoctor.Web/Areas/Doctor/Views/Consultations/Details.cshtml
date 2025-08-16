@@ -110,6 +110,17 @@
             </div>
         }
 
+        <!-- User Notes -->
+        @if (!string.IsNullOrEmpty(Model.Notes))
+        {
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">یادداشت‌های بیمار</h2>
+                <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-100">
+                    <p class="text-yellow-800">@Model.Notes</p>
+                </div>
+            </div>
+        }
+
         <!-- Doctor Notes & Prescription -->
         @if (Model.Status == ConsultationStatus.InProgress || Model.Status == ConsultationStatus.Completed)
         {
@@ -128,6 +139,10 @@
                             <div>
                                 <label for="prescription" class="block text-sm font-medium text-gray-700 mb-2">نسخه دارو</label>
                                 <textarea id="prescription" name="prescription" rows="4" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" placeholder="نسخه دارو و توصیه‌های درمانی...">@Model.Prescription</textarea>
+                            </div>
+                            <div>
+                                <label for="userNotes" class="block text-sm font-medium text-gray-700 mb-2">یادداشت‌های جدید برای بیمار</label>
+                                <textarea id="userNotes" name="userNotes" rows="3" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" placeholder="یادداشت‌های جدید برای بیمار..."></textarea>
                             </div>
                             <div class="flex justify-end">
                                 <button type="submit" class="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 shadow-sm hover:shadow-md">
@@ -158,6 +173,25 @@
                                 </div>
                             </div>
                         }
+                        
+                        <!-- Add New Notes Form -->
+                        <div class="mt-6 pt-6 border-t border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">افزودن یادداشت جدید</h3>
+                            <form asp-action="AddUserNotes" method="post">
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <div class="space-y-4">
+                                    <div>
+                                        <label for="newUserNotes" class="block text-sm font-medium text-gray-700 mb-2">یادداشت جدید برای بیمار</label>
+                                        <textarea id="newUserNotes" name="newUserNotes" rows="3" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" placeholder="یادداشت جدید برای بیمار..."></textarea>
+                                    </div>
+                                    <div class="flex justify-end">
+                                        <button type="submit" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg text-sm hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 shadow-sm hover:shadow-md">
+                                            افزودن یادداشت
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 }
             </div>

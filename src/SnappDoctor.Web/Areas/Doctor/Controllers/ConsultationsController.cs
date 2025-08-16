@@ -125,7 +125,7 @@ public class ConsultationsController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Complete(int id, string doctorNotes, string prescription)
+    public async Task<IActionResult> Complete(int id, string doctorNotes, string prescription, string userNotes)
     {
         var doctor = await GetCurrentDoctorAsync();
         if (doctor == null)
@@ -147,10 +147,58 @@ public class ConsultationsController : Controller
             consultation.DoctorNotes = doctorNotes;
             consultation.Prescription = prescription;
             
+            // Add user notes if provided
+            if (!string.IsNullOrEmpty(userNotes))
+            {
+                if (!string.IsNullOrEmpty(consultation.Notes))
+                {
+                    consultation.Notes += "\n\n" + userNotes;
+                }
+                else
+                {
+                    consultation.Notes = userNotes;
+                }
+            }
+            
             await _consultationRepository.UpdateAsync(consultation);
             TempData["Success"] = "مشاوره تکمیل شد";
         }
 
         return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddUserNotes(int id, string newUserNotes)
+    {
+        var doctor = await GetCurrentDoctorAsync();
+        if (doctor == null)
+        {
+            return RedirectToAction("Login", "Auth", new { area = "" });
+        }
+
+        var consultation = await _consultationRepository.GetByIdAsync(id);
+        if (consultation == null || consultation.DoctorId != doctor.Id)
+        {
+            return NotFound();
+        }
+
+        if (!string.IsNullOrEmpty(newUserNotes))
+        {
+            // Append new notes to existing notes
+            if (!string.IsNullOrEmpty(consultation.Notes))
+            {
+                consultation.Notes += "\n\n" + newUserNotes;
+            }
+            else
+            {
+                consultation.Notes = newUserNotes;
+            }
+            
+            consultation.UpdatedAt = DateTime.UtcNow;
+            await _consultationRepository.UpdateAsync(consultation);
+            TempData["Success"] = "یادداشت جدید با موفقیت اضافه شد";
+        }
+
+        return RedirectToAction("Details", new { id });
     }
 } 

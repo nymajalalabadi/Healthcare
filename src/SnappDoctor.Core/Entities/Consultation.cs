@@ -13,6 +13,7 @@ public class Consultation
     public DateTime? StartedAt { get; set; }
     public DateTime? EndedAt { get; set; }
     public string PatientSymptoms { get; set; } = string.Empty;
+    public string? Notes { get; set; }
     public string? DoctorNotes { get; set; }
     public string? Prescription { get; set; }
     public decimal Fee { get; set; }

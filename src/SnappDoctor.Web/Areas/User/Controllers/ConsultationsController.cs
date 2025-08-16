@@ -80,4 +80,68 @@ public class ConsultationsController : Controller
 
         return RedirectToAction("Index");
     }
+
+    [HttpPost]
+    public async Task<IActionResult> StartConsultation(int id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Auth", new { area = "" });
+        }
+
+        var consultation = await _consultationRepository.GetByIdAsync(id);
+        if (consultation == null || consultation.UserId != user.Id)
+        {
+            return NotFound();
+        }
+
+        if (consultation.Status == Core.Enums.ConsultationStatus.Confirmed || 
+            consultation.Status == Core.Enums.ConsultationStatus.InProgress)
+        {
+            // Here you would typically start the consultation (e.g., redirect to video call, chat, etc.)
+            consultation.Status = Core.Enums.ConsultationStatus.InProgress;
+            consultation.UpdatedAt = DateTime.UtcNow;
+            
+            await _consultationRepository.UpdateAsync(consultation);
+            TempData["Success"] = "مشاوره شروع شد";
+        }
+        else
+        {
+            TempData["Error"] = "امکان شروع این مشاوره وجود ندارد";
+        }
+
+        return RedirectToAction("Details", new { id = id });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CompleteConsultation(int id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login", "Auth", new { area = "" });
+        }
+
+        var consultation = await _consultationRepository.GetByIdAsync(id);
+        if (consultation == null || consultation.UserId != user.Id)
+        {
+            return NotFound();
+        }
+
+        if (consultation.Status == Core.Enums.ConsultationStatus.InProgress)
+        {
+            consultation.Status = Core.Enums.ConsultationStatus.Completed;
+            consultation.UpdatedAt = DateTime.UtcNow;
+            
+            await _consultationRepository.UpdateAsync(consultation);
+            TempData["Success"] = "مشاوره تکمیل شد";
+        }
+        else
+        {
+            TempData["Error"] = "امکان تکمیل این مشاوره وجود ندارد";
+        }
+
+        return RedirectToAction("Details", new { id = id });
+    }
 } 
