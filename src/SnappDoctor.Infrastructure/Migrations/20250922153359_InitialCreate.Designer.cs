@@ -12,8 +12,8 @@ using SnappDoctor.Infrastructure.Data;
 namespace SnappDoctor.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250703002524_AddUserIdToDoctor")]
-    partial class AddUserIdToDoctor
+    [Migration("20250922153359_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -179,12 +179,15 @@ namespace SnappDoctor.Infrastructure.Migrations
                     b.Property<DateTime?>("EndedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("Fee")
+                    b.Property<decimal?>("Fee")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<bool>("IsPaid")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PatientSymptoms")
                         .IsRequired()
@@ -236,11 +239,13 @@ namespace SnappDoctor.Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
+                    b.Property<decimal>("ConsultationFee")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -261,9 +266,17 @@ namespace SnappDoctor.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("MedicalLicenseNumber")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("OffersInPersonConsultation")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("OffersVideoCall")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("OffersVoiceCall")
+                        .HasColumnType("bit");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -301,13 +314,12 @@ namespace SnappDoctor.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
 
                     b.HasIndex("MedicalLicenseNumber")
-                        .IsUnique();
-
-                    b.HasIndex("PhoneNumber")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[MedicalLicenseNumber] IS NOT NULL");
 
                     b.HasIndex("UserId")
                         .IsUnique()
@@ -320,13 +332,17 @@ namespace SnappDoctor.Infrastructure.Migrations
                         {
                             Id = 1,
                             Bio = "متخصص زنان و زایمان با بیش از 10 سال تجربه",
-                            CreatedAt = new DateTime(2025, 7, 3, 0, 25, 23, 848, DateTimeKind.Utc).AddTicks(6462),
+                            ConsultationFee = 150000m,
+                            CreatedAt = new DateTime(2025, 9, 22, 15, 33, 58, 854, DateTimeKind.Utc).AddTicks(3658),
                             Email = "sara.sadeghi@example.com",
                             FirstName = "دکتر سارا",
                             IsActive = true,
                             IsAvailable = true,
                             LastName = "صادقی",
                             MedicalLicenseNumber = "12345",
+                            OffersInPersonConsultation = false,
+                            OffersVideoCall = true,
+                            OffersVoiceCall = true,
                             PhoneNumber = "09123456789",
                             Rating = 4.6m,
                             ReviewCount = 250,
@@ -337,13 +353,17 @@ namespace SnappDoctor.Infrastructure.Migrations
                         {
                             Id = 2,
                             Bio = "پزشک عمومی با تجربه در مشاوره‌های آنلاین",
-                            CreatedAt = new DateTime(2025, 7, 3, 0, 25, 23, 848, DateTimeKind.Utc).AddTicks(6470),
+                            ConsultationFee = 150000m,
+                            CreatedAt = new DateTime(2025, 9, 22, 15, 33, 58, 854, DateTimeKind.Utc).AddTicks(3668),
                             Email = "mohammad.farzipour@example.com",
                             FirstName = "دکتر محمد",
                             IsActive = true,
                             IsAvailable = true,
                             LastName = "فرضی‌پور",
                             MedicalLicenseNumber = "54321",
+                            OffersInPersonConsultation = false,
+                            OffersVideoCall = true,
+                            OffersVoiceCall = true,
                             PhoneNumber = "09123456790",
                             Rating = 4.9m,
                             ReviewCount = 300,
@@ -354,19 +374,147 @@ namespace SnappDoctor.Infrastructure.Migrations
                         {
                             Id = 3,
                             Bio = "متخصص بیماری‌های داخلی",
-                            CreatedAt = new DateTime(2025, 7, 3, 0, 25, 23, 848, DateTimeKind.Utc).AddTicks(6473),
+                            ConsultationFee = 150000m,
+                            CreatedAt = new DateTime(2025, 9, 22, 15, 33, 58, 854, DateTimeKind.Utc).AddTicks(3671),
                             Email = "milad.mozaffari@example.com",
                             FirstName = "دکتر میلاد",
                             IsActive = true,
                             IsAvailable = true,
                             LastName = "مظفری",
                             MedicalLicenseNumber = "67890",
+                            OffersInPersonConsultation = false,
+                            OffersVideoCall = true,
+                            OffersVoiceCall = true,
                             PhoneNumber = "09123456791",
                             Rating = 4.7m,
                             ReviewCount = 180,
                             Specialization = "داخلی",
                             YearsOfExperience = 12
                         });
+                });
+
+            modelBuilder.Entity("SnappDoctor.Core.Entities.DoctorBreakTime", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BreakType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("DoctorBreakTimes");
+                });
+
+            modelBuilder.Entity("SnappDoctor.Core.Entities.DoctorSchedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId", "DayOfWeek")
+                        .IsUnique();
+
+                    b.ToTable("DoctorSchedules");
+                });
+
+            modelBuilder.Entity("SnappDoctor.Core.Entities.DoctorTimeSettings", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BreakBetweenConsultationsMinutes")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(5);
+
+                    b.Property<int>("ConsultationDurationMinutes")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(30);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxDailyConsultations")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(20);
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId")
+                        .IsUnique();
+
+                    b.ToTable("DoctorTimeSettings");
                 });
 
             modelBuilder.Entity("SnappDoctor.Core.Entities.OtpCode", b =>
@@ -583,11 +731,44 @@ namespace SnappDoctor.Infrastructure.Migrations
             modelBuilder.Entity("SnappDoctor.Core.Entities.Doctor", b =>
                 {
                     b.HasOne("SnappDoctor.Core.Entities.User", "User")
-                        .WithOne()
+                        .WithOne("Doctor")
                         .HasForeignKey("SnappDoctor.Core.Entities.Doctor", "UserId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SnappDoctor.Core.Entities.DoctorBreakTime", b =>
+                {
+                    b.HasOne("SnappDoctor.Core.Entities.Doctor", "Doctor")
+                        .WithMany("BreakTimes")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+                });
+
+            modelBuilder.Entity("SnappDoctor.Core.Entities.DoctorSchedule", b =>
+                {
+                    b.HasOne("SnappDoctor.Core.Entities.Doctor", "Doctor")
+                        .WithMany("Schedules")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+                });
+
+            modelBuilder.Entity("SnappDoctor.Core.Entities.DoctorTimeSettings", b =>
+                {
+                    b.HasOne("SnappDoctor.Core.Entities.Doctor", "Doctor")
+                        .WithOne("TimeSettings")
+                        .HasForeignKey("SnappDoctor.Core.Entities.DoctorTimeSettings", "DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("SnappDoctor.Core.Entities.OtpCode", b =>
@@ -603,12 +784,20 @@ namespace SnappDoctor.Infrastructure.Migrations
 
             modelBuilder.Entity("SnappDoctor.Core.Entities.Doctor", b =>
                 {
+                    b.Navigation("BreakTimes");
+
                     b.Navigation("Consultations");
+
+                    b.Navigation("Schedules");
+
+                    b.Navigation("TimeSettings");
                 });
 
             modelBuilder.Entity("SnappDoctor.Core.Entities.User", b =>
                 {
                     b.Navigation("Consultations");
+
+                    b.Navigation("Doctor");
 
                     b.Navigation("OtpCodes");
                 });

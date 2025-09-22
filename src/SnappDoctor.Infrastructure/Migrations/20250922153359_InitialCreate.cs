@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SnappDoctor.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initialpage : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,6 +38,8 @@ namespace SnappDoctor.Infrastructure.Migrations
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     ProfilePictureUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    ProfilePicture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    UserType = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -56,33 +58,6 @@ namespace SnappDoctor.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Doctors",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Specialization = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    MedicalLicenseNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ProfilePictureUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Bio = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    YearsOfExperience = table.Column<int>(type: "int", nullable: false),
-                    Rating = table.Column<decimal>(type: "decimal(3,2)", precision: 3, scale: 2, nullable: false),
-                    ReviewCount = table.Column<int>(type: "int", nullable: false),
-                    IsAvailable = table.Column<bool>(type: "bit", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Doctors", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -192,6 +167,45 @@ namespace SnappDoctor.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Doctors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Specialization = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    MedicalLicenseNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ProfilePictureUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    ProfilePicture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Bio = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    YearsOfExperience = table.Column<int>(type: "int", nullable: false),
+                    ConsultationFee = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OffersVoiceCall = table.Column<bool>(type: "bit", nullable: false),
+                    OffersVideoCall = table.Column<bool>(type: "bit", nullable: false),
+                    OffersInPersonConsultation = table.Column<bool>(type: "bit", nullable: false),
+                    Rating = table.Column<decimal>(type: "decimal(3,2)", precision: 3, scale: 2, nullable: false),
+                    ReviewCount = table.Column<int>(type: "int", nullable: false),
+                    IsAvailable = table.Column<bool>(type: "bit", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Doctors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Doctors_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OtpCodes",
                 columns: table => new
                 {
@@ -230,9 +244,10 @@ namespace SnappDoctor.Infrastructure.Migrations
                     StartedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EndedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PatientSymptoms = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DoctorNotes = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     Prescription = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
-                    Fee = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
+                    Fee = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: true),
                     IsPaid = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -254,14 +269,89 @@ namespace SnappDoctor.Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "DoctorBreakTimes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DoctorId = table.Column<int>(type: "int", nullable: false),
+                    BreakType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    StartTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    EndTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DoctorBreakTimes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DoctorBreakTimes_Doctors_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DoctorSchedules",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DoctorId = table.Column<int>(type: "int", nullable: false),
+                    DayOfWeek = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    StartTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    EndTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DoctorSchedules", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DoctorSchedules_Doctors_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DoctorTimeSettings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DoctorId = table.Column<int>(type: "int", nullable: false),
+                    ConsultationDurationMinutes = table.Column<int>(type: "int", nullable: false, defaultValue: 30),
+                    BreakBetweenConsultationsMinutes = table.Column<int>(type: "int", nullable: false, defaultValue: 5),
+                    MaxDailyConsultations = table.Column<int>(type: "int", nullable: false, defaultValue: 20),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DoctorTimeSettings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DoctorTimeSettings_Doctors_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Doctors",
-                columns: new[] { "Id", "Bio", "CreatedAt", "Email", "FirstName", "IsActive", "IsAvailable", "LastName", "MedicalLicenseNumber", "PhoneNumber", "ProfilePictureUrl", "Rating", "ReviewCount", "Specialization", "UpdatedAt", "YearsOfExperience" },
+                columns: new[] { "Id", "Bio", "ConsultationFee", "CreatedAt", "Email", "FirstName", "IsActive", "IsAvailable", "LastName", "MedicalLicenseNumber", "OffersInPersonConsultation", "OffersVideoCall", "OffersVoiceCall", "PhoneNumber", "ProfilePicture", "ProfilePictureUrl", "Rating", "ReviewCount", "Specialization", "UpdatedAt", "UserId", "YearsOfExperience" },
                 values: new object[,]
                 {
-                    { 1, "متخصص زنان و زایمان با بیش از 10 سال تجربه", new DateTime(2025, 6, 30, 3, 21, 37, 49, DateTimeKind.Utc).AddTicks(5523), "sara.sadeghi@example.com", "دکتر سارا", true, true, "صادقی", "12345", "09123456789", null, 4.6m, 250, "زنان و زایمان", null, 10 },
-                    { 2, "پزشک عمومی با تجربه در مشاوره‌های آنلاین", new DateTime(2025, 6, 30, 3, 21, 37, 49, DateTimeKind.Utc).AddTicks(5533), "mohammad.farzipour@example.com", "دکتر محمد", true, true, "فرضی‌پور", "54321", "09123456790", null, 4.9m, 300, "پزشک عمومی", null, 8 },
-                    { 3, "متخصص بیماری‌های داخلی", new DateTime(2025, 6, 30, 3, 21, 37, 49, DateTimeKind.Utc).AddTicks(5535), "milad.mozaffari@example.com", "دکتر میلاد", true, true, "مظفری", "67890", "09123456791", null, 4.7m, 180, "داخلی", null, 12 }
+                    { 1, "متخصص زنان و زایمان با بیش از 10 سال تجربه", 150000m, new DateTime(2025, 9, 22, 15, 33, 58, 854, DateTimeKind.Utc).AddTicks(3658), "sara.sadeghi@example.com", "دکتر سارا", true, true, "صادقی", "12345", false, true, true, "09123456789", null, null, 4.6m, 250, "زنان و زایمان", null, null, 10 },
+                    { 2, "پزشک عمومی با تجربه در مشاوره‌های آنلاین", 150000m, new DateTime(2025, 9, 22, 15, 33, 58, 854, DateTimeKind.Utc).AddTicks(3668), "mohammad.farzipour@example.com", "دکتر محمد", true, true, "فرضی‌پور", "54321", false, true, true, "09123456790", null, null, 4.9m, 300, "پزشک عمومی", null, null, 8 },
+                    { 3, "متخصص بیماری‌های داخلی", 150000m, new DateTime(2025, 9, 22, 15, 33, 58, 854, DateTimeKind.Utc).AddTicks(3671), "milad.mozaffari@example.com", "دکتر میلاد", true, true, "مظفری", "67890", false, true, true, "09123456791", null, null, 4.7m, 180, "داخلی", null, null, 12 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -321,21 +411,41 @@ namespace SnappDoctor.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DoctorBreakTimes_DoctorId",
+                table: "DoctorBreakTimes",
+                column: "DoctorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Doctors_Email",
                 table: "Doctors",
                 column: "Email",
-                unique: true);
+                unique: true,
+                filter: "[Email] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Doctors_MedicalLicenseNumber",
                 table: "Doctors",
                 column: "MedicalLicenseNumber",
+                unique: true,
+                filter: "[MedicalLicenseNumber] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Doctors_UserId",
+                table: "Doctors",
+                column: "UserId",
+                unique: true,
+                filter: "[UserId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DoctorSchedules_DoctorId_DayOfWeek",
+                table: "DoctorSchedules",
+                columns: new[] { "DoctorId", "DayOfWeek" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Doctors_PhoneNumber",
-                table: "Doctors",
-                column: "PhoneNumber",
+                name: "IX_DoctorTimeSettings_DoctorId",
+                table: "DoctorTimeSettings",
+                column: "DoctorId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -364,6 +474,15 @@ namespace SnappDoctor.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Consultations");
+
+            migrationBuilder.DropTable(
+                name: "DoctorBreakTimes");
+
+            migrationBuilder.DropTable(
+                name: "DoctorSchedules");
+
+            migrationBuilder.DropTable(
+                name: "DoctorTimeSettings");
 
             migrationBuilder.DropTable(
                 name: "OtpCodes");
