@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SnappDoctor.Core.Entities;
@@ -20,6 +21,14 @@ public class ApplicationDbContext : IdentityDbContext<User>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        // Customize Identity table names
+        builder.Entity<IdentityRole>(entity => entity.ToTable("SnappRoles"));
+        builder.Entity<IdentityUserRole<string>>(entity => entity.ToTable("SnappUserRoles"));
+        builder.Entity<IdentityUserClaim<string>>(entity => entity.ToTable("SnappUserClaims"));
+        builder.Entity<IdentityUserLogin<string>>(entity => entity.ToTable("SnappUserLogins"));
+        builder.Entity<IdentityUserToken<string>>(entity => entity.ToTable("SnappUserTokens"));
+        builder.Entity<IdentityRoleClaim<string>>(entity => entity.ToTable("SnappRoleClaims"));
 
         // User entity configuration
         builder.Entity<User>(entity =>

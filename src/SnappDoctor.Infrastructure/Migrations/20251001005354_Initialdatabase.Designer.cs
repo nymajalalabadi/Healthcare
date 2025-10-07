@@ -12,8 +12,8 @@ using SnappDoctor.Infrastructure.Data;
 namespace SnappDoctor.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250922153359_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251001005354_Initialdatabase")]
+    partial class Initialdatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,7 +49,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("SnappRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -74,7 +74,7 @@ namespace SnappDoctor.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
+                    b.ToTable("SnappRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -99,7 +99,7 @@ namespace SnappDoctor.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
+                    b.ToTable("SnappUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -121,7 +121,7 @@ namespace SnappDoctor.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
+                    b.ToTable("SnappUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -136,7 +136,7 @@ namespace SnappDoctor.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
+                    b.ToTable("SnappUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -155,7 +155,7 @@ namespace SnappDoctor.Infrastructure.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
+                    b.ToTable("SnappUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("SnappDoctor.Core.Entities.Consultation", b =>
@@ -333,7 +333,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                             Id = 1,
                             Bio = "متخصص زنان و زایمان با بیش از 10 سال تجربه",
                             ConsultationFee = 150000m,
-                            CreatedAt = new DateTime(2025, 9, 22, 15, 33, 58, 854, DateTimeKind.Utc).AddTicks(3658),
+                            CreatedAt = new DateTime(2025, 10, 1, 0, 53, 54, 523, DateTimeKind.Utc).AddTicks(3464),
                             Email = "sara.sadeghi@example.com",
                             FirstName = "دکتر سارا",
                             IsActive = true,
@@ -354,7 +354,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                             Id = 2,
                             Bio = "پزشک عمومی با تجربه در مشاوره‌های آنلاین",
                             ConsultationFee = 150000m,
-                            CreatedAt = new DateTime(2025, 9, 22, 15, 33, 58, 854, DateTimeKind.Utc).AddTicks(3668),
+                            CreatedAt = new DateTime(2025, 10, 1, 0, 53, 54, 523, DateTimeKind.Utc).AddTicks(3473),
                             Email = "mohammad.farzipour@example.com",
                             FirstName = "دکتر محمد",
                             IsActive = true,
@@ -375,7 +375,7 @@ namespace SnappDoctor.Infrastructure.Migrations
                             Id = 3,
                             Bio = "متخصص بیماری‌های داخلی",
                             ConsultationFee = 150000m,
-                            CreatedAt = new DateTime(2025, 9, 22, 15, 33, 58, 854, DateTimeKind.Utc).AddTicks(3671),
+                            CreatedAt = new DateTime(2025, 10, 1, 0, 53, 54, 523, DateTimeKind.Utc).AddTicks(3476),
                             Email = "milad.mozaffari@example.com",
                             FirstName = "دکتر میلاد",
                             IsActive = true,
